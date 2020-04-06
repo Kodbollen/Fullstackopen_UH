@@ -1,0 +1,5 @@
+#+TITLE: Full stack open 2020
+
+Exercises for 'Full stack open 2020 - Deep Dive Into Modern Web Development' from the University of Helsinki (UH).
+
+https://fullstack-hy2020.github.io/
