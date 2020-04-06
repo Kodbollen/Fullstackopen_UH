@@ -1,0 +1,22 @@
+#+TITLE: Exercises for part0
+#+AUTHOR: Anders B. Ladefoged
+
+* 0.4: New note
+*Create a diagram depicting the situation where the user creates a new note on page https://fullstack-exampleapp.herokuapp.com/notes by writing something into the text field and clicking the /submit/ button*
+
+The following sequence diagram describes the communication between the client and the server
+
+[[./new_note.png]]
+
+* 0.5 Single page app
+*Create a diagram depicting the situation where the user goes to the single page app version of the notes app at https://fullstack-exampleapp.herokuapp.com/spa*
+
+Loading the single page application only differs on the js requested.
+The following sequence diagram describes the communication between the client and the server
+[[./spa_load.png]]
+
+* 0.6 New note (SPA)
+*Create a diagram depicting the situation where user creates a new note using the single page version of the app*
+
+The following sequence diagram describes the communication between the client and the server
+[[./new_note_spa.png]]
