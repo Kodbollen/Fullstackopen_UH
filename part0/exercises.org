@@ -13,6 +13,7 @@ The following sequence diagram describes the communication between the client an
 
 Loading the single page application only differs on the js requested.
 The following sequence diagram describes the communication between the client and the server
+
 [[./spa_load.png]]
 
 * 0.6 New note (SPA)
