@@ -31,7 +31,7 @@ const Content = (props) => {
 const Total = (props) => {
     return (
         <>
-          <p>Number of exercises {props.parts.map(obj => obj.exercises).reduce((a, b) => a + b, 0)}</p>
+          <p>Number of exercises {props.parts.map(obj => obj.exercises).reduce((a, b) => a + b)}</p>
 		</>
     )
 }
