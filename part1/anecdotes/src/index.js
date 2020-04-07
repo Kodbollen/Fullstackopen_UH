@@ -5,7 +5,12 @@ import './index.css';
 
 const Header = ({text}) => (<h1>{text}</h1>)
 
-const Display = ({anecdote}) => (<p>{anecdote}</p>)
+const Display = ({anecdote, votes}) => (
+    <div>
+      <p>{anecdote}</p>
+      <p>has {votes} votes</p>
+    </div>
+)
 
 const Button = ({onClick, text}) => (
   <button onClick={onClick}>
@@ -15,17 +20,28 @@ const Button = ({onClick, text}) => (
 
 const App = ({anecdotes}) => {
     const [selected, setSelected] = useState(0)
-    const randomAnecdote = (anecdotes) => {
-        const index = () => Math.floor(Math.random() * anecdotes.length)
-        setSelected(index)
-        
+    const [votes, setVotes] = useState(Array(anecdotes.length).fill(0))
+
+    const randomAnecdote = () => {
+        const randomIndex = () => Math.floor(Math.random() * anecdotes.length)
+        // ensure new anecdote on every click
+        let selection = randomIndex()
+        while (selection === selected) {selection = randomIndex()}
+        setSelected(selection)
+	}
+
+    const vote = () => {
+        let voteArray = [...votes]
+        voteArray[selected] += 1
+        setVotes(voteArray)
 	}
 
     return (
         <div>
           <Header text='Anecdote'/>
-          <Display anecdote={anecdotes[selected]}/>
-          <Button onClick={() => randomAnecdote(anecdotes)} text='Random anecdote '/>
+          <Display anecdote={anecdotes[selected]} votes={votes[selected]}/>
+          <Button onClick={randomAnecdote} text='Random anecdote '/>
+          <Button onClick={vote} text='Vote '/>
         </div>
     )
 }
