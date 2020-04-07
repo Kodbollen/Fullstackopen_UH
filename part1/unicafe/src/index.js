@@ -14,6 +14,14 @@ const Statistics = ({good, neutral, bad}) => {
     const average = Math.round((good - bad) / (good + neutral + bad) * 100 + Number.EPSILON) / 100
     const positive = Math.round((good + neutral) / (good + neutral + bad) * 10000) / 100
 
+    if (good + neutral + bad === 0) {
+        return (
+            <div>
+              No feedback given
+			</div>
+		)
+    }
+    
     return (
         <>
           <p>Good: {good}</p>
