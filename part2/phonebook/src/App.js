@@ -1,11 +1,51 @@
 import React, { useState } from 'react'
 import './App.css';
 
-const Person = ({person}) => (
-    <p>
-      {person.name} {person.number}
-	</p>
-)
+const Filter = ({nameFilter, updateFilter}) => (
+    <div>
+      Filter names:<input value={nameFilter} onChange={updateFilter}/>
+    </div>)
+
+const EntryForm = ({onSubmit, name, nameHandler, number, numberHandler}) => (
+    <form onSubmit={onSubmit}>
+      <div>
+        <div>name:<input value={name} onChange={nameHandler}/></div>
+        <div>number: <input value={number} onChange={numberHandler}/></div>
+      </div>
+      <div>
+        <button type="submit">
+          Add
+        </button>
+      </div>      
+	</form>)
+
+const DisplayFiltered = ({listToBeFiltered, filter}) => {
+    const arraysEqual = (a, b) => {
+        if (a === b) return true
+        if (a == null || b == null) return false
+        if (a.length !== b.length) return false
+        for (let i = 0; i < a.length; i++) {
+            if (a[i] !== b[i]) return false
+		}
+        return true
+        
+    }
+    let result
+    if (filter.length === 0) {
+        result = listToBeFiltered
+    }
+    else {
+        result = listToBeFiltered.filter(person =>
+                                         arraysEqual([...person.name.toLowerCase()].slice(0, filter.length),
+                                                     [...filter.toLowerCase()]))
+    }
+    return (
+        <div>
+          {result.map(person => <p key={person.name}>{person.name} {person.number}</p>)}
+	    </div>)
+
+
+}
 
 
 const App = () => {
@@ -18,7 +58,6 @@ const App = () => {
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
     const [nameFilter, setNameFilter] = useState('')
-    const [filteredPhonebook, setFilteredPhonebook] = useState([...persons])
     
     const addName = (event) => {
         event.preventDefault()
@@ -30,9 +69,6 @@ const App = () => {
                 number: newNumber
 		    }
             setPersons(persons.concat(phonebookEntry))
-            setFilteredPhonebook(persons.concat(phonebookEntry).filter(
-                person => arraysEqual([...person.name.toLowerCase()].slice(0, nameFilter.length),[...nameFilter.toLowerCase()])                                                          
-            ))
 	    }
     }
 
@@ -44,45 +80,23 @@ const App = () => {
         setNewNumber(event.target.value)
     }
 
-    const arraysEqual = (a, b) => {
-        if (a === b) return true
-        if (a == null || b == null) return false
-        if (a.length !== b.length) return false
-        for (let i = 0; i < a.length; i++) {
-            if (a[i] !== b[i]) return false
-		}
-        return true
-	}
-
     const updateFilter= (event) => {
-        const filter = event == null ? nameFilter : event.target.value
+        const filter = event.target.value
         setNameFilter(filter)
-        setFilteredPhonebook(persons.filter(person =>
-                                  arraysEqual([...person.name.toLowerCase()].slice(0, filter.length),[...filter.toLowerCase()])))
 	}
     
     return (
         <div>
           <h2>Phonebook</h2>
-          <div>Filter names:<input value={nameFilter} onChange={updateFilter}/></div>
-          <form onSubmit={addName}>
-            <h2>Add entry to phonebook</h2>
-            <div>
-              <div>name:<input value={newName} onChange={handleNameChange}/></div>
-              <div>number: <input value={newNumber} onChange={handleNumberChange}/></div>
-            </div>
-            <div>
-              <button type="submit">
-                Add
-              </button>
-            </div>
-          </form> 
+          <Filter nameFilter={nameFilter} updateFilter={updateFilter}/>
+          <h2>Add entry to phonebook</h2>
+          <EntryForm onSubmit={addName} name={newName} nameHandler={handleNameChange}
+                     number={newNumber} numberHandler={handleNumberChange}/>
           <h2>Numbers</h2>
-          <div>
-            {filteredPhonebook.map(person => <Person key={person.name} person={person}/>)}
-		  </div>
+          <DisplayFiltered listToBeFiltered={persons} filter={nameFilter}/>
         </div>
     )
 }
 
 export default App
+ 
