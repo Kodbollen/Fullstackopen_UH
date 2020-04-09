@@ -19,7 +19,7 @@ const EntryForm = ({onSubmit, name, nameHandler, number, numberHandler}) => (
       </div>      
 	</form>)
 
-const DisplayFiltered = ({listToBeFiltered, filter}) => {
+const DisplayFiltered = ({listToBeFiltered, filter, persons, setPersons}) => {
     const arraysEqual = (a, b) => {
         if (a === b) return true
         if (a == null || b == null) return false
@@ -28,8 +28,18 @@ const DisplayFiltered = ({listToBeFiltered, filter}) => {
             if (a[i] !== b[i]) return false
 		}
         return true
-        
     }
+
+    const removeContact = person => {
+        if (window.confirm(`Do you really want to delete ${person.name} from your contacts?`)) {
+            personService.remove(person.id)
+                .then(response => {
+                    personService.getAll().then(response => setPersons(response))
+                })
+        }
+    }
+    
+    
     let result
     if (filter.length === 0) {
         result = listToBeFiltered
@@ -41,7 +51,10 @@ const DisplayFiltered = ({listToBeFiltered, filter}) => {
     }
     return (
         <div>
-          {result.map(person => <p key={person.name}>{person.name} {person.number}</p>)}
+          {result.map(person =>
+                      <div key={person.name}>
+                        {person.name} {person.number} <button onClick={() => removeContact(person)}>Delete</button>
+                      </div>)}
 	    </div>)
 
 
@@ -65,15 +78,25 @@ const App = () => {
     
     const addName = (event) => {
         event.preventDefault()
+        const dialogue = `${newName} already exists in the phonebook! Do you want to replace the phone number for the contact?`
         if (persons.map(person => person.name).includes(newName)) {
-            alert(`${newName} already exists in the phonebook!`)
+            if (window.confirm(dialogue)) {
+                const contact = persons.find(p => p.name === newName)
+                const updatedContact = {...contact, number: newNumber}
+                personService.update(contact.id, updatedContact)
+                    .then(response =>
+                          personService.getAll()
+                          .then(response => setPersons(response)))
+			}
 		} else {
             const phonebookEntry = {
                 name: newName,
                 number: newNumber
 		    }
             personService.create(phonebookEntry)
-            setPersons(persons.concat(phonebookEntry))
+                .then(response =>
+                      personService.getAll()
+                      .then(response => setPersons(response)))
 	    }
     }
 
@@ -98,7 +121,8 @@ const App = () => {
           <EntryForm onSubmit={addName} name={newName} nameHandler={handleNameChange}
                      number={newNumber} numberHandler={handleNumberChange}/>
           <h2>Numbers</h2>
-          <DisplayFiltered listToBeFiltered={persons} filter={nameFilter}/>
+          <DisplayFiltered listToBeFiltered={persons} filter={nameFilter}
+                           persons={persons} setPersons={setPersons}/>
         </div>
     )
 }
