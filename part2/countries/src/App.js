@@ -10,6 +10,7 @@ const Filter = ({countryFilter, updateFilter}) => (
     </div>)
 
 const Country = ({name, capital, population, languages, flag}) => {
+
     return (
         <div>
           <h1>{name}</h1>
@@ -24,7 +25,7 @@ const Country = ({name, capital, population, languages, flag}) => {
 	)
 }
 
-const DisplayFiltered = ({listToBeFiltered, filter}) => {
+const Display = ({listToBeFiltered, filter, showCountry, setShowCountry}) => {
     const arraysEqual = (a, b) => {
         if (a === b) return true
         if (a == null || b == null) return false
@@ -35,6 +36,16 @@ const DisplayFiltered = ({listToBeFiltered, filter}) => {
         return true
         
     }
+
+    const toggleContent = (name) => {
+        if (showCountry.includes(name)) {
+            console.log(showCountry.filter(item => item !== name))
+            setShowCountry(showCountry.filter(item => item !== name))
+		} else {
+            console.log(showCountry.concat(name))
+            setShowCountry(showCountry.concat(name))
+        }
+	}
     let result
     if (filter.length === 0) {
         result = listToBeFiltered
@@ -55,18 +66,30 @@ const DisplayFiltered = ({listToBeFiltered, filter}) => {
                          population={result[0].population} languages={result[0].languages}
                          flag={result[0].flag}/>)
     }
-    
     return (
         <div>
-          {result.map(country => <p key={country.name}>{country.name}</p>)}
-	    </div>)
-
+          {result.map(country => (
+              <div key={country.name}>
+                {country.name}
+                <button key={country.alpha3Code} onClick={() => toggleContent(country.name)}>
+                  {showCountry.includes(country.name) ? 'Hide' : 'Show'}
+                </button>
+                {showCountry.includes(country.name) ?
+                 <Country name={country.name} capital={country.capital}
+                          population={country.population} languages={country.languages}
+                          flag={country.flag}/>
+                 : null}
+              </div>
+		  ))}
+	    </div>
+    )
 
 }
 
 const App = () => {
     const [countries, setCountries] = useState([])
     const [countryFilter, setCountryFilter] = useState('')
+    const [showCountry, setShowCountry] = useState([])
 
     const hook = () => {
         axios.get('https://restcountries.eu/rest/v2/all')
@@ -85,7 +108,8 @@ const App = () => {
     return (
         <div>
           <Filter countryFilter={countryFilter} updateFilter={updateFilter} />
-          <DisplayFiltered listToBeFiltered={countries} filter={countryFilter}/>
+          <Display listToBeFiltered={countries} filter={countryFilter}
+                           showCountry={showCountry} setShowCountry={setShowCountry}/>
         </div>
     )
 }
