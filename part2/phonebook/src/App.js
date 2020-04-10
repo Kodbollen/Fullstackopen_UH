@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import personService from './services/persons.js'
+import './index.css'
+
+
+const InfoBar = ({infoMessage, setInfoMessage, infoType}) => {
+    if (infoMessage === null) return null
+    return (
+        <div className={infoType}>{infoMessage}</div>
+    )
+}
 
 const Filter = ({nameFilter, updateFilter}) => (
     <div>
@@ -19,7 +28,8 @@ const EntryForm = ({onSubmit, name, nameHandler, number, numberHandler}) => (
       </div>      
 	</form>)
 
-const DisplayFiltered = ({listToBeFiltered, filter, persons, setPersons}) => {
+const DisplayFiltered = ({listToBeFiltered, filter, persons, setPersons,
+                          infoMessage, setInfoMessage, infoType, setInfoType }) => {
     const arraysEqual = (a, b) => {
         if (a === b) return true
         if (a == null || b == null) return false
@@ -34,8 +44,16 @@ const DisplayFiltered = ({listToBeFiltered, filter, persons, setPersons}) => {
         if (window.confirm(`Do you really want to delete ${person.name} from your contacts?`)) {
             personService.remove(person.id)
                 .then(response => {
+                    setInfoType('info')
+                    setInfoMessage(`Succesfully removed ${person.name}`)
                     personService.getAll().then(response => setPersons(response))
                 })
+                .catch(error => {
+                    const msg = `Entry for ${person.name} wasn't found in database.`
+                    setInfoType('error')
+                    setInfoMessage(msg)
+                    personService.getAll().then(response => setPersons(response))
+				})
         }
     }
     
@@ -66,6 +84,8 @@ const App = () => {
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
     const [nameFilter, setNameFilter] = useState('')
+    const [infoMessage, setInfoMessage] = useState(null)
+    const [infoType, setInfoType ] = useState('info')
 
     const hook = () => {
         personService.getAll()
@@ -86,7 +106,14 @@ const App = () => {
                 personService.update(contact.id, updatedContact)
                     .then(response =>
                           personService.getAll()
-                          .then(response => setPersons(response)))
+                          .then(response => {
+                              setPersons(response)
+                              setInfoType('info')
+                              setInfoMessage(`${contact.name} succesfully updated!`)
+                              setTimeout(() => {
+                                  setInfoMessage(null)
+                              }, 5000)
+                          }))
 			}
 		} else {
             const phonebookEntry = {
@@ -96,7 +123,14 @@ const App = () => {
             personService.create(phonebookEntry)
                 .then(response =>
                       personService.getAll()
-                      .then(response => setPersons(response)))
+                      .then(response => {
+                          setPersons(response)
+                          setInfoType('info')
+                          setInfoMessage(`${newName} succesfully added to phonebook!`)
+                          setTimeout(() => {
+                              setInfoMessage(null)
+                          }, 5000)
+                      }))
 	    }
     }
 
@@ -115,6 +149,7 @@ const App = () => {
     
     return (
         <div>
+          <InfoBar infoMessage={infoMessage} setInfoMessage={setInfoMessage} infoType={infoType}/>
           <h2>Phonebook</h2>
           <Filter nameFilter={nameFilter} updateFilter={updateFilter}/>
           <h2>Add entry to phonebook</h2>
@@ -122,10 +157,10 @@ const App = () => {
                      number={newNumber} numberHandler={handleNumberChange}/>
           <h2>Numbers</h2>
           <DisplayFiltered listToBeFiltered={persons} filter={nameFilter}
-                           persons={persons} setPersons={setPersons}/>
+                           persons={persons} setPersons={setPersons} infoMessage={infoMessage}
+                           setInfoMessage={setInfoMessage} infoType={infoType} setInfoType={setInfoType}/>
         </div>
     )
 }
 
 export default App
- 

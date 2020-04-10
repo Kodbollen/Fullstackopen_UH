@@ -2,7 +2,7 @@
   "persons": [
     {
       "name": "abc",
-      "number": "123",
+      "number": "213",
       "id": 1
     },
     {
@@ -19,16 +19,6 @@
       "name": "doå",
       "number": "788",
       "id": 5
-    },
-    {
-      "name": "øjb",
-      "number": "099",
-      "id": 6
-    },
-    {
-      "name": "laa",
-      "number": "333",
-      "id": 7
     }
   ]
 }
