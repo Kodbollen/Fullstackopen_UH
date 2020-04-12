@@ -34,7 +34,11 @@ app.listen(PORT, ()=> {
 
 
 app.get('/', (request, response) => {
-	response.send('<div>Find a list of contacts in phonebook by using the api: ./api/persons</div>')
+	response.send('<div><p>Find a list of contacts in phonebook by using the api:</p><p>contacts: ./api/persons</p><p>info: ./info</p></div>')
+})
+
+app.get('/info', (request, response) => {
+	response.send(`<p>Phonebook has ${contacts.length} contacts</p><p> ${new Date()}</p>`)
 })
 
 app.get('/api/persons', (request, response) => {
