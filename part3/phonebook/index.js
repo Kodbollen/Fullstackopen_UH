@@ -5,24 +5,24 @@ app.use(express.json())
 
 let contacts = [
 	{
-		id: 1,
 		name: "Arto Hellas",
-		number: "040-123456"
+		number: "040-123456",
+		id: 1
 	},
 	{
-		id: 2,
 		name: "Ada Lovelace",
-		number: "39-44-5323523"
+		number: "39-44-5323523",
+		id: 2
 	},
 	{
-		id: 3,
 		name: "Dan Abramov",
-		number: "12-43-234345"
+		number: "12-43-234345",
+		id: 3
 	},
 	{
-		id: 4,
 		name: "Mary Poppendieck",
-		number: "39-23-6423122"
+		number: "39-23-6423122",
+		id: 4
 	}
 ]
 
@@ -55,35 +55,44 @@ app.get('/api/persons/:id', (request, response) => {
 	}
 })
 
+app.post('/api/persons', (request, response) => {
+	const body = request.body
+	console.log(body)
+	console.log(body.name)
+	console.log(typeof(body.name))
+	console.log(contacts[0].name)
+	console.log(typeof(contacts[0].name))
+	console.log(body.number)
+	const generateId = () => {
+		return Math.round(Math.random() * 10000)
+	}
+
+	if (!body.name) {
+		return response.status(400).json({error: 'Cannot create contact with no name'})
+	}
+
+	if (!body.number) {
+		return response.status(400).json({error: 'Cannot create contact with no number'})
+	}
+
+	console.log(contacts.map(contact => contact.name))
+	if (contacts.map(contact => contact.name).includes(body.name)){
+		return response.status(400).json({error: `Cannot create contact. ${body.name} already exists in phonebook`})
+	} 
+
+	const contact = {
+		name: body.name,
+		number: body.number,
+		id: generateId()
+	}
+	
+	contacts = contacts.concat(contact)
+	response.json(contact)
+})
+
 app.delete('/api/persons/:id', (request, response) => {
 	const id = Number(request.params.id)
 	contacts = contacts.filter(contact => contact.id !== id)
 
 	response.status(204).end()
 })
-
-// app.post('/api/contacts', (request, response) => {
-// 	const body = request.body
-
-// 	if (!body.name || !body.number) {
-// 		return response.status(400).json({
-// 			error: 'incomplete entry: missing name or number'
-// 		})
-// 	}
-
-// 	const generateId =  () => {
-// 		const maxId = contacts.length > 0 ? Math.max(...contacts.map(contact => contact.id)) : 0
-// 		return maxId + 1
-// 	}
-
-// 	const contact = {
-// 		name: body.name,
-// 		number: body.number,
-// 		id: generateId(),
-// 					 content: body.content,
-// 					 date: new Date(),
-// 					 important: body.important || false}
-				  
-// 	notes = notes.concat(note)
-// 	response.json(note)
-// })
