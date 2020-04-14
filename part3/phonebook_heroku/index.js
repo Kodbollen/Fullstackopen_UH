@@ -44,7 +44,7 @@ app.get('/api/persons/:id', (request, response, next) => {
 		.catch(error => next(error))
 })
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
 	const body = request.body
 
 	if (!body.name) {
@@ -54,7 +54,7 @@ app.post('/api/persons', (request, response) => {
 	if (!body.number) {
 		return response.status(400).json({error: 'Cannot create contact with no number'})
 	}
-	
+
 	// console.log(contacts.map(contact => contact.name))
 	// if (contacts.map(contact => contact.name).includes(body.name)){
 	// 	return response.status(400).json({error: `Cannot create contact. ${body.name} already exists in phonebook`})
@@ -65,9 +65,10 @@ app.post('/api/persons', (request, response) => {
 		number: body.number
 	})
 	
-	contact.save().then(savedContact => {
-		response.json(savedContact.toJSON())		
-	})
+	contact.save()
+		.then(savedContact => savedContact.toJSON())
+		.then(savedFormatted => response.json(savedFormatted))
+		.catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (request, response, next) => {
@@ -96,10 +97,8 @@ app.put('/api/persons/:id', (request, response, next) => {
 	console.log(request.params.id)
 
 	Person.findByIdAndUpdate(request.params.id, contact, {new: true})
-		.then(updatedContact => {
-			console.log('contact updated')
-			response.json(updatedContact.toJSON())
-		})
+		.then(updatedContact => updatedContact.toJSON())
+		.then(updatedFormatted => response.json(updatedFormatted))
 		.catch(error => next(error))
 })
 
@@ -114,7 +113,10 @@ const errorHandler = (error, request, response, next) => {
 
 	if (error.name === 'CastError' && error.kind === 'ObjectId') {
 		return response.status(400).json({error: `malformatted id`})
+	} else if (error.name === 'ValidationError') {
+		return response.status(400).json({error: error.message})
 	}
+	
 	next(error)
 }
 

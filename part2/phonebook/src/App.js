@@ -131,6 +131,15 @@ const App = () => {
                               setInfoMessage(null)
                           }, 5000)
                       }))
+				.catch(error => {
+					console.log('error logged')
+					console.log(error)
+					console.log(error.response)
+					console.log(error.response.data)
+					console.log(error.response.data.error)
+					setInfoType('error')
+                    setInfoMessage(error.response.data.error)
+				})
 	    }
     }
 
