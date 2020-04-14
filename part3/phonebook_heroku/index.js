@@ -64,7 +64,7 @@ app.post('/api/persons', (request, response, next) => {
 		name: body.name,
 		number: body.number
 	})
-	
+
 	contact.save()
 		.then(savedContact => savedContact.toJSON())
 		.then(savedFormatted => response.json(savedFormatted))
@@ -73,7 +73,7 @@ app.post('/api/persons', (request, response, next) => {
 
 app.delete('/api/persons/:id', (request, response, next) => {
 	Person.findByIdAndRemove(request.params.id)
-		.then(result => {
+		.then(() => {
 			response.status(204).end()
 		})
 		.catch(error => next(error))
@@ -112,11 +112,11 @@ const errorHandler = (error, request, response, next) => {
 	console.error(error.message)
 
 	if (error.name === 'CastError' && error.kind === 'ObjectId') {
-		return response.status(400).json({error: `malformatted id`})
+		return response.status(400).json({error: 'malformatted id'})
 	} else if (error.name === 'ValidationError') {
 		return response.status(400).json({error: error.message})
 	}
-	
+
 	next(error)
 }
 
