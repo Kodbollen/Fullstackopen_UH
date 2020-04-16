@@ -17,14 +17,8 @@ blogsRouter.post('/', async (request, response, next) => {
 		upvotes: upvoteValue
 	})
 
-	try {
-		const savedBlog = await blog.save()
-		response.json(savedBlog.toJSON())
-	}
-	catch(exception) {
-		next(exception)
-	}
-
+	const savedBlog = await blog.save()
+	response.json(savedBlog.toJSON())
 })
 
 module.exports = blogsRouter
