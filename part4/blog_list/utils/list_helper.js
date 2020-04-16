@@ -31,9 +31,27 @@ const mostBlogs = (blogs) => {
 	
 }
 
+const mostUpvotes = (blogs) => {
+	if (blogs.length === 0) return {}
+	let results = []
+	// unique list of authors
+	const authors = [... new Set(blogs.map(blog => blog.author))]
+	// concat {author, totalUpvotes} to result
+	authors.forEach(author => {
+		const upvotes = totalUpvotes(blogs.filter(blog => blog.author === author))
+		results = results.concat({author: author, upvotes: upvotes})
+	})
+	// find index of highest upvote count
+	const index = results.map(author => author.upvotes).indexOf(Math.max(...results.map(author => author.upvotes)))
+
+	return results[index]
+	
+}
+
 module.exports = {
 	dummy,
 	totalUpvotes,
 	favouriteBlog,
-	mostBlogs
+	mostBlogs,
+	mostUpvotes
 }
