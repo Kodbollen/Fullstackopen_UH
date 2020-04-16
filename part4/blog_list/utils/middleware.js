@@ -8,13 +8,23 @@ const requestLogger = (request, response, next) => {
 	next()
 }
 
+const unknownEndpoint = (request, response) => {
+	response.status(404).send({error: 'unknownendpoint'})
+}
+
 const errorHandler = (error, request, response, next) => {
-	logger.error(error.message)
-	if (error.name === 'ValidationError') {
+	logger.error(error)
+	if (error.name === 'CastError' && error.message.includes('Cast to ObjectId')) {
+		return response.status(400).json({error: 'Malformatted id'})
+	} else if (error.name === 'ValidationError') {
 		return response.status(400).json({ error: error.message })
-  }
+	}
+
+	next(error)
 }
 
 module.exports = {
-	requestLogger, errorHandler
+	requestLogger,
+	unknownEndpoint,
+	errorHandler
 }
