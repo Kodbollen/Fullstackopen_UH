@@ -91,6 +91,22 @@ test('upvotes should default to zero if undefined ', async () => {
 	expect(response.body.slice(-1)[0].upvotes).toBe(0)
 })
 
+test('Malformatted post request should return 400:bad request', async () => {
+	const blogNoTitle = {
+		author: "Abraham Lincoln",
+		url:"constitution.org"
+	}
+	const blogNoAuthor = {
+		title: "Some blogs are okay",
+		url:"constitution.org"
+	}
+
+	const postNoTitle = await api.post('/api/blogs').send(blogNoTitle)
+	expect(postNoTitle.statusCode).toBe(400)
+
+	const postNoAuthor = await api.post('/api/blogs').send(blogNoAuthor)
+	expect(postNoAuthor.statusCode).toBe(400)
+})
 
 afterAll(() => {
 	mongoose.connection.close()
