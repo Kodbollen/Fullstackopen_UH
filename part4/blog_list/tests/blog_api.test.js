@@ -60,6 +60,22 @@ test('Id is properly defined', async () => {
 	expect(response.body[0].id).toBeDefined()
 })
 
+test('Valid blog can be posted', async () => {
+	const blogObject = {
+		title: "Some blogs are okay",
+		author: "Abraham Lincoln",
+		url:"constitution.org",
+		upvotes: 9999}
+
+	const postRequest = await api.post('/api/blogs').send(blogObject)
+	expect(postRequest.statusCode).toBe(200)
+	expect(postRequest.type).toBe('application/json')
+
+	const response = await api.get('/api/blogs')
+	expect(response.body).toHaveLength(initialBlogs.length + 1)
+	expect(response.body.map(blog => blog.title)).toContain('Some blogs are okay')
+})
+
 afterAll(() => {
 	mongoose.connection.close()
 })
