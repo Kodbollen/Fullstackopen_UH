@@ -5,33 +5,10 @@ const helper = require('./test_helper')
 const api = supertest(app)
 const Blog = require('../models/blog')
 
-const initialBlogs = [
-	{
-		title: "Blogs are bad",
-		author: "Anders",
-		url: "dinmor.com",
-		upvotes: 123,
-		id: "5e96ed64386aab14578c5bd8"
-	},
-	{
-		title: "Blogs are still bad",
-		author: "Anders",
-		url: "dinstadigemor.com",
-		upvotes: 1234,
-		id: "5e96fb2fa109141a915a6047"
-	},
-	{
-		title: "Blogs are unnecessary",
-		author: "Anders",
-		url: "dinligegyldigemor.com",
-		upvotes: 12345,
-		id: "5e9839ebd664500ec33f55f3"
-	}]
-
 beforeEach(async () => {
 	await Blog.deleteMany({})
 
-	const blogObjects = initialBlogs.map(blog => new Blog(blog))
+	const blogObjects = helper.initialBlogs.map(blog => new Blog(blog))
 	const promiseArray = blogObjects.map(blog => blog.save())
 	await Promise.all(promiseArray)
 })
@@ -44,7 +21,7 @@ describe('GET of all blogs', () => {
 
 	test('All blogs are returned', async() => {
 		const response = await api.get('/api/blogs')
-		expect(response.body).toHaveLength(initialBlogs.length)
+		expect(response.body).toHaveLength(helper.initialBlogs.length)
 	})
 
 	test('Specific blog is within returned blogs', async() => {
@@ -71,7 +48,7 @@ describe('POST of new blog', () => {
 		expect(postRequest.type).toBe('application/json')
 
 		const response = await api.get('/api/blogs')
-		expect(response.body).toHaveLength(initialBlogs.length + 1)
+		expect(response.body).toHaveLength(helper.initialBlogs.length + 1)
 		expect(response.body.map(blog => blog.title)).toContain('Some blogs are okay')
 	})
 
@@ -127,6 +104,21 @@ describe('GET of specific blog', () => {
 
 		const resultBlog = await api.get(`/api/blogs/${invalidId}`)
 		expect(resultBlog.statusCode).toBe(400)
+	})
+})
+
+describe('Delete specific blog',  () => {
+	test('Succeeds with status code 204 if id is valid', async () => {
+		const blogsBefore = await helper.blogsInDb()
+		const blogToDelete = blogsBefore[0]
+		const result = await api.delete(`/api/blogs/${blogToDelete.id}`)
+		expect(result.statusCode).toBe(204)
+
+		const remaindingBlogs = await helper.blogsInDb()
+		expect(remaindingBlogs).toHaveLength(blogsBefore.length - 1)
+
+		const urls = remaindingBlogs.map(blog => blog.url)
+		expect(urls).not.toContain(blogToDelete.url)
 	})
 })
 
