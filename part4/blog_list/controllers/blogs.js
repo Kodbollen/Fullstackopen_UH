@@ -9,11 +9,12 @@ blogsRouter.get('/', async (request, response) => {
 
 blogsRouter.post('/', async (request, response, next) => {
 	const body = request.body
+	const upvoteValue = Boolean(body.upvotes) ? body.upvotes : 0
 	const blog = new Blog({
 		title: body.title,
 		author: body.author,
 		url: body.url,
-		upvotes: body.upvotes
+		upvotes: upvoteValue
 	})
 
 	try {

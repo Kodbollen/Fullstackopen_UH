@@ -76,6 +76,22 @@ test('Valid blog can be posted', async () => {
 	expect(response.body.map(blog => blog.title)).toContain('Some blogs are okay')
 })
 
+test('upvotes should default to zero if undefined ', async () => {
+	const blogObject = {
+		title: "Some blogs are okay",
+		author: "Abraham Lincoln",
+		url:"constitution.org"
+	}
+
+	const postRequest = await api.post('/api/blogs').send(blogObject)
+	expect(postRequest.statusCode).toBe(200)
+	expect(postRequest.type).toBe('application/json')
+
+	const response = await api.get('/api/blogs')
+	expect(response.body.slice(-1)[0].upvotes).toBe(0)
+})
+
+
 afterAll(() => {
 	mongoose.connection.close()
 })
