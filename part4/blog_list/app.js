@@ -8,7 +8,7 @@ const logger = require('./utils/logger')
 const middleware = require('./utils/middleware')
 const mongoose = require('mongoose')
 
-console.log(`Connecting to ${config.MONGODB_URI}`)
+logger.info(`Connecting to ${config.MONGODB_URI}`)
 
 mongoose.connect(config.MONGODB_URI, {useNewUrlParser: true, useUnifiedTopology: true})
 	.then(() => {
@@ -20,11 +20,10 @@ mongoose.connect(config.MONGODB_URI, {useNewUrlParser: true, useUnifiedTopology:
 
 app.use(cors())
 app.use(express.json())
-
-app.listen(config.PORT, () => {
-	console.log(`Server running on port: ${config.PORT}`)
-})
+app.use(middleware.requestLogger)
 
 app.use('/api/blogs', blogsRouter)
 
 app.use(middleware.errorHandler)
+
+module.exports = app
