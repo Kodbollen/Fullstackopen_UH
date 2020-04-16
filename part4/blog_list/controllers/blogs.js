@@ -17,9 +17,9 @@ blogsRouter.get('/:id', async (request, response) => {
 	}
 })
 
-blogsRouter.post('/', async (request, response, next) => {
+blogsRouter.post('/', async (request, response) => {
 	const body = request.body
-	const upvoteValue = Boolean(body.upvotes) ? body.upvotes : 0
+	const upvoteValue = body.upvotes ? body.upvotes : 0
 	const blog = new Blog({
 		title: body.title,
 		author: body.author,
@@ -31,7 +31,23 @@ blogsRouter.post('/', async (request, response, next) => {
 	response.json(savedBlog.toJSON())
 })
 
-blogsRouter.delete('/:id', async (request, response, next) => {
+blogsRouter.put('/:id', async (request, response) => {
+	const body = request.body
+	const newBlog = {
+		title: body.title,
+		author: body.author,
+		url: body.url,
+		upvotes: body.upvotes ? body.upvotes : 0
+	}
+	if (!newBlog.title || !newBlog.author
+		|| !newBlog.url) {
+		return response.status(400).json({error: 'Cannot modify blog. Malformatted data'})
+	}
+	const blogToUpdate = await Blog.findByIdAndUpdate(request.params.id, newBlog, {new: true})
+	response.json(blogToUpdate.toJSON())
+})
+
+blogsRouter.delete('/:id', async (request, response) => {
 	await Blog.findByIdAndRemove(request.params.id)
 	response.status(204).end()
 })

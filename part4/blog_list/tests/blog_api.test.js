@@ -38,9 +38,9 @@ describe('GET of all blogs', () => {
 describe('POST of new blog', () => {
 	test('Valid blog can be posted', async () => {
 		const blogObject = {
-			title: "Some blogs are okay",
-			author: "Abraham Lincoln",
-			url:"constitution.org",
+			title: 'Some blogs are okay',
+			author: 'Abraham Lincoln',
+			url: 'constitution.org',
 			upvotes: 9999}
 
 		const postRequest = await api.post('/api/blogs').send(blogObject)
@@ -54,9 +54,9 @@ describe('POST of new blog', () => {
 
 	test('upvotes should default to zero if undefined ', async () => {
 		const blogObject = {
-			title: "Some blogs are okay",
-			author: "Abraham Lincoln",
-			url:"constitution.org"
+			title: 'Some blogs are okay',
+			author: 'Abraham Lincoln',
+			url: 'constitution.org'
 		}
 
 		const postRequest = await api.post('/api/blogs').send(blogObject)
@@ -69,20 +69,19 @@ describe('POST of new blog', () => {
 
 	test('Malformatted post request should return 400:bad request', async () => {
 		const blogNoTitle = {
-			author: "Abraham Lincoln",
-			url:"constitution.org"
+			author: 'Abraham Lincoln',
+			url: 'constitution.org'
 		}
 		const blogNoAuthor = {
-			title: "Some blogs are okay",
-			url:"constitution.org"
+			title: 'Some blogs are okay',
+			url: 'constitution.org'
 		}
 
 		const postNoTitle = await api.post('/api/blogs').send(blogNoTitle)
 		expect(postNoTitle.statusCode).toBe(400)
 
 		const postNoAuthor = await api.post('/api/blogs').send(blogNoAuthor)
-		expect(postNoAuthor.statusCode).toBe(400)
-	})
+		expect(postNoAuthor.statusCode).toBe(400)})
 })
 
 describe('GET of specific blog', () => {
@@ -119,6 +118,130 @@ describe('Delete specific blog',  () => {
 
 		const urls = remaindingBlogs.map(blog => blog.url)
 		expect(urls).not.toContain(blogToDelete.url)
+	})
+})
+
+describe('Update blog', () => {
+	describe('Update title', () => {
+		test('Update title should succeed', async () => {
+			const blogs = await helper.blogsInDb()
+			const newObject = {
+				title: 'New Title!',
+				author: blogs[0].author,
+				url: blogs[0].url,
+				upvotes: blogs[0].upvotes
+			}
+			const postRequest = await api.put(`/api/blogs/${blogs[0].id}`).send(newObject)
+			expect(postRequest.statusCode).toBe(200)
+			expect(postRequest.type).toBe('application/json')
+		})
+		test('Update title should succeed only if no malformatted data', async () => {
+			const blogs = await helper.blogsInDb()
+			const newObject = {
+				title: 'New Title!',
+				author: '',
+				url: blogs[0].url,
+				upvotes: blogs[0].upvotes
+			}
+			const postRequest = await api.put(`/api/blogs/${blogs[0].id}`).send(newObject)
+			expect(postRequest.statusCode).toBe(400)
+		})
+	})
+	describe('Update author', () => {
+		test('Update author should succeed', async () => {
+			const blogs = await helper.blogsInDb()
+			const newObject = {
+				title: blogs[0].title,
+				author: 'Edsger W. Dijkstra',
+				url: blogs[0].url,
+				upvotes: blogs[0].upvotes
+			}
+			const postRequest = await api.put(`/api/blogs/${blogs[0].id}`).send(newObject)
+			expect(postRequest.statusCode).toBe(200)
+			expect(postRequest.type).toBe('application/json')
+		})
+		test('Update author should succeed only if no malformatted data', async () => {
+			const blogs = await helper.blogsInDb()
+			const newObject = {
+				title: blogs[0].title,
+				author: 'Edsger W. Dijkstra',
+				url: '',
+				upvotes: blogs[0].upvotes
+			}
+			const postRequest = await api.put(`/api/blogs/${blogs[0].id}`).send(newObject)
+			expect(postRequest.statusCode).toBe(400)
+		})
+	})
+	describe('Update upvotes', () => {
+		test('Update upvotes should succeed', async () => {
+			const blogs = await helper.blogsInDb()
+			const newObject = {
+				title: blogs[0].title,
+				author: blogs[0].author,
+				url: blogs[0].url,
+				upvotes: 123
+			}
+			const postRequest = await api.put(`/api/blogs/${blogs[0].id}`).send(newObject)
+			expect(postRequest.statusCode).toBe(200)
+			expect(postRequest.type).toBe('application/json')
+		})
+		test('Upvotes should update if not defined in new blog', async () => {
+			const blogs = await helper.blogsInDb()
+			const newObject = {
+				title: blogs[0].title,
+				author: blogs[0].author,
+				url: blogs[0].url
+			}
+			const postRequest = await api.put(`/api/blogs/${blogs[0].id}`).send(newObject)
+			expect(postRequest.statusCode).toBe(200)
+			expect(postRequest.type).toBe('application/json')
+		})
+		test('Update upvotes should succeed only if no malformatted data', async () => {
+			const blogs = await helper.blogsInDb()
+			const newObject = {
+				title: '',
+				author: blogs[0].author,
+				url: blogs[0].url
+			}
+			const postRequest = await api.put(`/api/blogs/${blogs[0].id}`).send(newObject)
+			expect(postRequest.statusCode).toBe(400)
+		})
+	})
+	describe('Update url', () => {
+		test('Update url should succeed', async () => {
+			const blogs = await helper.blogsInDb()
+			const newObject = {
+				title: blogs[0].title,
+				author: blogs[0].author,
+				url: blogs[0].url,
+				upvotes: 123
+			}
+			const postRequest = await api.put(`/api/blogs/${blogs[0].id}`).send(newObject)
+			expect(postRequest.statusCode).toBe(200)
+			expect(postRequest.type).toBe('application/json')
+		})
+		test('Update url should succeed only if unique', async () => {
+			const blogs = await helper.blogsInDb()
+			const newObject = {
+				title: blogs[0].title,
+				author: blogs[0].author,
+				url: 'dinligegyldigemor.com',
+				upvotes: 123
+			}
+			const postRequest = await api.put(`/api/blogs/${blogs[0].id}`).send(newObject)
+			expect(postRequest.statusCode).toBe(400)
+		})
+		test('Update url should succeed only if no malformatted data', async () => {
+			const blogs = await helper.blogsInDb()
+			const newObject = {
+				title: blogs[0].title,
+				author: '',
+				url: 'dinligegyldigemor.com',
+				upvotes: 123
+			}
+			const postRequest = await api.put(`/api/blogs/${blogs[0].id}`).send(newObject)
+			expect(postRequest.statusCode).toBe(400)
+		})
 	})
 })
 

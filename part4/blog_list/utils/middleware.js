@@ -17,7 +17,9 @@ const errorHandler = (error, request, response, next) => {
 	if (error.name === 'CastError' && error.message.includes('Cast to ObjectId')) {
 		return response.status(400).json({error: 'Malformatted id'})
 	} else if (error.name === 'ValidationError') {
-		return response.status(400).json({ error: error.message })
+		return response.status(400).json({error: error.message })
+	} else if (error.codeName === 'DuplicateKey') {
+		return response.status(400).json({error: 'DuplicateKey'})
 	}
 
 	next(error)
