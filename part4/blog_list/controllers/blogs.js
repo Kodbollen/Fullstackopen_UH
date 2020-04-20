@@ -23,7 +23,8 @@ blogsRouter.post('/', async (request, response) => {
 	const body = request.body
 	const token = request.token
 	const decodedToken = jwt.verify(token, process.env.SECRET)
-
+	console.log(decodedToken)
+	console.log(decodedToken.id)
 	if (!token || !decodedToken.id) {
 		return response.status(401).json({error: 'token missing or invalid'})
 	}
@@ -62,8 +63,17 @@ blogsRouter.put('/:id', async (request, response) => {
 })
 
 blogsRouter.delete('/:id', async (request, response) => {
-	await Blog.findByIdAndRemove(request.params.id)
+	const blog = await Blog.findById(request.params.id)
+	const token = request.token
+	const decodedToken = jwt.verify(token, process.env.SECRET)
+
+	if (!decodedToken.id === blog.user.id) {
+		response.status(400).json({error: 'Missing privilege: cannot delete blog owned by another user'})
+	}
+	
+	await blog.remove()
 	response.status(204).end()
 })
 
 module.exports = blogsRouter
+
