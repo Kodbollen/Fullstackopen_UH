@@ -23,8 +23,6 @@ blogsRouter.post('/', async (request, response) => {
 	const body = request.body
 	const token = request.token
 	const decodedToken = jwt.verify(token, process.env.SECRET)
-	console.log(decodedToken)
-	console.log(decodedToken.id)
 	if (!token || !decodedToken.id) {
 		return response.status(401).json({error: 'token missing or invalid'})
 	}
@@ -76,4 +74,4 @@ blogsRouter.delete('/:id', async (request, response) => {
 })
 
 module.exports = blogsRouter
-
+// -H 'authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjVlOWNlOTRjZWFjNTg5NWVmNDcyNzUxYiIsImlhdCI6MTU4NzM3NjA4OX0.WOPkhWCUvJFsfAmHXgfBXDuA4IK1ubb7k91wT_3t-0c'

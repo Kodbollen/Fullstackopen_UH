@@ -8,8 +8,15 @@ const Blog = require('../models/blog')
 beforeEach(async () => {
 	await Blog.deleteMany({})
 
+	const loginRoot = await api.post('/api/login/').send({username: 'root', password: 'goodpassword'})
+	const token = loginRoot.body.token
 	const blogObjects = helper.initialBlogs.map(blog => new Blog(blog))
-	const promiseArray = blogObjects.map(blog => blog.save())
+	const promiseArray = blogObjects.map(async blog => {
+		const postRequest = await api.post('/api/blogs')
+			  .set('Authorization',`Bearer ${token}`)
+			  .set('Accept', 'application/json')
+			  .send(blog)
+	})
 	await Promise.all(promiseArray)
 })
 describe('GET of all blogs', () => {
@@ -43,7 +50,12 @@ describe('POST of new blog', () => {
 			url: 'constitution.org',
 			upvotes: 9999}
 
-		const postRequest = await api.post('/api/blogs').send(blogObject)
+		const loginRoot = await api.post('/api/login/').send({username: 'root', password: 'goodpassword'})
+		const token = loginRoot.body.token
+		const postRequest = await api.post('/api/blogs')
+			  .set('Authorization',`Bearer ${token}`)
+			  .set('Accept', 'application/json')
+			  .send(blogObject)
 		expect(postRequest.statusCode).toBe(200)
 		expect(postRequest.type).toBe('application/json')
 
@@ -59,7 +71,12 @@ describe('POST of new blog', () => {
 			url: 'constitution.org'
 		}
 
-		const postRequest = await api.post('/api/blogs').send(blogObject)
+		const loginRoot = await api.post('/api/login/').send({username: 'root', password: 'goodpassword'})
+		const token = loginRoot.body.token
+		const postRequest = await api.post('/api/blogs')
+			  .set('Authorization',`Bearer ${token}`)
+			  .set('Accept', 'application/json')
+			  .send(blogObject)
 		expect(postRequest.statusCode).toBe(200)
 		expect(postRequest.type).toBe('application/json')
 
@@ -76,12 +93,35 @@ describe('POST of new blog', () => {
 			title: 'Some blogs are okay',
 			url: 'constitution.org'
 		}
-
-		const postNoTitle = await api.post('/api/blogs').send(blogNoTitle)
+		const loginRoot = await api.post('/api/login/').send({username: 'root', password: 'goodpassword'})
+		const token = loginRoot.body.token
+		
+		const postNoTitle = await api.post('/api/blogs')
+			  .set('Authorization',`Bearer ${token}`)
+			  .set('Accept', 'application/json')
+			  .send(blogNoTitle)
 		expect(postNoTitle.statusCode).toBe(400)
 
-		const postNoAuthor = await api.post('/api/blogs').send(blogNoAuthor)
+		const postNoAuthor = await api.post('/api/blogs')
+			  .set('Authorization',`Bearer ${token}`)
+			  .set('Accept', 'application/json')
+			  .send(blogNoAuthor)
 		expect(postNoAuthor.statusCode).toBe(400)})
+	test('Blog should not be posted by unauthorized user', async () => {
+		const blogObject = {
+			title: 'Some blogs are okay',
+			author: 'Abraham Lincoln',
+			url: 'constitution.org',
+			upvotes: 9999}
+
+		const postRequest = await api.post('/api/blogs')
+			  .set('Accept', 'application/json')
+			  .send(blogObject)
+		expect(postRequest.statusCode).toBe(401)
+
+		const response = await api.get('/api/blogs')
+		expect(response.body).toHaveLength(helper.initialBlogs.length)
+	})	
 })
 
 describe('GET of specific blog', () => {
@@ -110,7 +150,12 @@ describe('Delete specific blog',  () => {
 	test('Succeeds with status code 204 if id is valid', async () => {
 		const blogsBefore = await helper.blogsInDb()
 		const blogToDelete = blogsBefore[0]
+		const loginRoot = await api.post('/api/login/').send({username: 'root', password: 'goodpassword'})
+		const token = loginRoot.body.token
+		
 		const result = await api.delete(`/api/blogs/${blogToDelete.id}`)
+			  .set('Authorization',`Bearer ${token}`)
+			  .set('Accept', 'application/json')
 		expect(result.statusCode).toBe(204)
 
 		const remaindingBlogs = await helper.blogsInDb()
