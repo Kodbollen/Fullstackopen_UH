@@ -25,12 +25,17 @@ const LoginForm = ({handleLogin, username, setUsername, password, setPassword}) 
 	</form>
 )
 
-const BlogContent = ({blogs, updateBlog}) => (
-    <div>
-      <h2>blogs</h2>
-      {blogs.map(blog => <Blog key={blog.id} blog={blog} putBlog={updateBlog}/>)}
-    </div>
-)
+const BlogContent = ({blogs, updateBlog}) => {
+    const sorted = blogs.sort((a, b) => {
+        return b.upvotes - a.upvotes
+	})
+    return (
+        <div>
+          <h2>blogs</h2>
+          {sorted.map(blog => <Blog key={blog.id} blog={blog} putBlog={updateBlog}/>)}
+        </div>
+    )
+}
 
 const CurrentUser = ({user, setUser}) => {
     const logoutUser = () => {
