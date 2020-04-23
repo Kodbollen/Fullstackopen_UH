@@ -17,12 +17,12 @@ const LoginForm = ({handleLogin, username, setUsername, password, setPassword}) 
     <form onSubmit={handleLogin}>
       <div>
         username:<input type='text' value={username} name='username' onChange={({target}) => setUsername(target.value)}/>
-	  </div>
+      </div>
       <div>
         password:<input type='password' value={password} name='password' onChange={({target}) => setPassword(target.value)}/>
-	  </div>
+      </div>
       <button type='submit'>Login</button>
-	</form>
+    </form>
 )
 
 const BlogContent = ({blogs, updateBlog, deleteBlog, user}) => {
@@ -46,7 +46,7 @@ const CurrentUser = ({user, setUser}) => {
         <div>
           <p>Current user: {user.username}</p>
           <button type='button' onClick={logoutUser}>Logout</button>
-	    </div>
+        </div>
     )
 }
 
@@ -57,7 +57,7 @@ const App = () => {
     const [user, setUser] = useState(null)
     const [infoMessage, setInfoMessage] = useState('')
     const [infoType, setInfoType ] = useState('info')
-    
+
     const handleLogin = async (event) => {
         event.preventDefault()
         try {
@@ -71,7 +71,7 @@ const App = () => {
             setInfoType('error')
             setInfoMessage(exception.message)
             setTimeout(() => {
-                setInfoMessage('')                
+                setInfoMessage('')
 			}, 5000)
 		}
     }
@@ -95,7 +95,7 @@ const App = () => {
     const deleteBlog = async (blogObject) => {
         await blogService.remove(blogObject, user.token)
         const blogs = await blogService.getAll()
-        setBlogs(blogs)        
+        setBlogs(blogs)
 	}
 
     useEffect(() => {
@@ -109,7 +109,7 @@ const App = () => {
         fetchBlogs()
         return () => {ignore = true}
     }, [])
-    
+
     useEffect(() => {
         const loggedUser = window.localStorage.getItem('loggedUser')
         if (loggedUser) {
@@ -137,7 +137,7 @@ const App = () => {
           <BlogContent blogs={blogs} updateBlog={putBlog} deleteBlog={deleteBlog} user={user}/>
           <Togglable buttonLabel={'Create new blog'} ref={newBlogRef}>
             <NewBlog addBlog={addBlog}/>
-		  </Togglable>
+          </Togglable>
         </div>
     )
 }
