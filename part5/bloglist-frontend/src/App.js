@@ -2,7 +2,14 @@ import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import './App.css'
 
+const InfoBar = ({infoMessage, infoType}) => {
+    if (infoMessage === '') return null
+    return (
+        <div className={infoType}>{infoMessage}</div>
+    )
+}
 
 const LoginForm = ({handleLogin, username, setUsername, password, setPassword}) => (
     <form onSubmit={handleLogin}>
@@ -36,7 +43,7 @@ const CurrentUser = ({user, setUser}) => {
     )
 }
 
-const NewBlog = ({title, setTitle, author, setAuthor, url, setUrl, user}) => {
+const NewBlog = ({title, setTitle, author, setAuthor, url, setUrl, user, setInfoType, setInfoMessage}) => {
     const createBlog = () => {
         const newBlog = {
             title: title,
@@ -44,6 +51,12 @@ const NewBlog = ({title, setTitle, author, setAuthor, url, setUrl, user}) => {
             url: url
 		}
         blogService.create(newBlog, user.token)
+        setInfoType('info')
+        setInfoMessage(`A new blog '${title}' by ${author} was created`)
+        setTimeout(() => {
+            setInfoMessage('')
+		}, 5000)
+        
 	}
     return (
         <form onSubmit={createBlog}>
@@ -73,6 +86,8 @@ const App = () => {
     const [title, setTitle] = useState('')
     const [author, setAuthor] = useState('')
     const [url, setUrl] = useState('')
+    const [infoMessage, setInfoMessage] = useState('')
+    const [infoType, setInfoType ] = useState('info')
     
     const handleLogin = async (event) => {
         event.preventDefault()
@@ -80,12 +95,15 @@ const App = () => {
             const user = await loginService.login({username, password})
             window.localStorage.setItem('loggedUser', JSON.stringify(user))
 
-            // blogService.setToken(token)
             setUser(user)
             setUsername('')
             setPassword('')
 		} catch(exception) {
-            
+            setInfoType('error')
+            setInfoMessage(exception.message)
+            setTimeout(() => {
+                setInfoMessage('')                
+			}, 5000)
 		}
     }
 
@@ -113,16 +131,20 @@ const App = () => {
 
     return (
         <div>
+          <InfoBar infoMessage={infoMessage} infoType={infoType}/>
           {user === null && <LoginForm handleLogin={handleLogin}
                                        username={username} setUsername={setUsername}
-                                       password={password} setPassword={setPassword}/>}
+                                       password={password} setPassword={setPassword}
+                                       setInfoType={setInfoType} setInfoMessage={setInfoMessage}/>}
           {user !== null && <CurrentUser user={user} setUser={setUser}/>}
           {user !== null && <BlogContent blogs={blogs}/>}
           {user !== null && <NewBlog title={title} setTitle={setTitle}
                                      author={author} setAuthor={setAuthor}
-                                     url={url} setUrl={setUrl} user={user}/>}
+                                     url={url} setUrl={setUrl} user={user}
+                                     setInfoType={setInfoType} setInfoMessage={setInfoMessage}/>}
         </div>
     )
 }
 
 export default App
+
