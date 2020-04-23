@@ -1,7 +1,6 @@
 import React, {useState} from 'react'
-import blogService from '../services/blogs'
 
-const NewBlog = ({user, setInfoType, setInfoMessage}) => {
+const NewBlog = ({addBlog}) => {
     const [title, setTitle] = useState('')
     const [author, setAuthor] = useState('')
     const [url, setUrl] = useState('')
@@ -12,13 +11,7 @@ const NewBlog = ({user, setInfoType, setInfoMessage}) => {
             author: author,
             url: url
 		}
-        blogService.create(newBlog, user.token)
-        setInfoType('info')
-        setInfoMessage(`A new blog '${title}' by ${author} was created`)
-        setTimeout(() => {
-            setInfoMessage('')
-		}, 5000)
-        
+		addBlog(newBlog)
 	}
     return (
         <form onSubmit={createBlog}>

@@ -71,6 +71,16 @@ const App = () => {
 		}
     }
 
+    const addBlog =(blogObject) => {
+        newBlogRef.current.toggleVisibility()
+        blogService.create(blogObject, user.token)
+        setInfoType('info')
+        setInfoMessage(`A new blog '${blogObject.title}' by ${blogObject.author} was created`)
+        setTimeout(() => {
+            setInfoMessage('')
+		}, 5000)
+	}
+
 
     useEffect(() => {
         let ignore = false
@@ -93,6 +103,8 @@ const App = () => {
 		}
     }, [])
 
+    const newBlogRef = React.createRef()
+
     if (user === null) {
         return (
             <div>
@@ -108,8 +120,8 @@ const App = () => {
           <InfoBar infoMessage={infoMessage} infoType={infoType}/>
           <CurrentUser user={user} setUser={setUser}/>
           <BlogContent blogs={blogs}/>
-          <Togglable buttonLabel={'Create new blog'}>
-            <NewBlog user={user} setInfoType={setInfoType} setInfoMessage={setInfoMessage}/>
+          <Togglable buttonLabel={'Create new blog'} ref={newBlogRef}>
+            <NewBlog addBlog={addBlog}/>
 		  </Togglable>
         </div>
     )
