@@ -1,6 +1,6 @@
 import React, {useState, useImperativeHandle} from 'react'
 
-const Blog = React.forwardRef(({blog}, ref) => {
+const Blog = React.forwardRef(({blog, putBlog}, ref) => {
 	const blogStyle = {
         paddingTop: 10,
         paddingLeft: 2,
@@ -12,6 +12,18 @@ const Blog = React.forwardRef(({blog}, ref) => {
     
 	const toggleVisibility = () => {
 		setContentVisibility(!contentVisibility)
+	}
+
+    const updateBlog = () => {
+        const updatedBlog = {
+            _id: blog.id,
+            title: blog.title,
+            author: blog.author,
+            url: blog.url,
+            upvotes: blog.upvotes + 1,
+            user: blog.user
+		}
+        putBlog(updatedBlog)
 	}
 
     const hideOnVisibility = {display: contentVisibility ? '' : 'none'}
@@ -28,7 +40,7 @@ const Blog = React.forwardRef(({blog}, ref) => {
           <div style={hideOnVisibility}>
             <p>url: {blog.url}</p>
             <div>
-              upvotes: {blog.upvotes}<button>upvote</button>
+              upvotes: {blog.upvotes}<button onClick={updateBlog}>upvote</button>
 			</div>
 		  </div>
         </div>

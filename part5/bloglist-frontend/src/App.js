@@ -25,10 +25,10 @@ const LoginForm = ({handleLogin, username, setUsername, password, setPassword}) 
 	</form>
 )
 
-const BlogContent = ({blogs}) => (
+const BlogContent = ({blogs, updateBlog}) => (
     <div>
       <h2>blogs</h2>
-      {blogs.map(blog => <Blog key={blog.id} blog={blog} />)}
+      {blogs.map(blog => <Blog key={blog.id} blog={blog} putBlog={updateBlog}/>)}
     </div>
 )
 
@@ -71,7 +71,7 @@ const App = () => {
 		}
     }
 
-    const addBlog =(blogObject) => {
+    const addBlog = (blogObject) => {
         newBlogRef.current.toggleVisibility()
         blogService.create(blogObject, user.token)
         setInfoType('info')
@@ -79,6 +79,12 @@ const App = () => {
         setTimeout(() => {
             setInfoMessage('')
 		}, 5000)
+	}
+
+    const putBlog = async (blogObject) => {
+        await blogService.put(blogObject, user.token)
+        const blogs = await blogService.getAll()
+        setBlogs(blogs)
 	}
 
 
@@ -99,7 +105,6 @@ const App = () => {
         if (loggedUser) {
             const user = JSON.parse(loggedUser)
             setUser(user)
-            // blogService.setToken(user.token)
 		}
     }, [])
 
@@ -119,7 +124,7 @@ const App = () => {
         <div>
           <InfoBar infoMessage={infoMessage} infoType={infoType}/>
           <CurrentUser user={user} setUser={setUser}/>
-          <BlogContent blogs={blogs}/>
+          <BlogContent blogs={blogs} updateBlog={putBlog}/>
           <Togglable buttonLabel={'Create new blog'} ref={newBlogRef}>
             <NewBlog addBlog={addBlog}/>
 		  </Togglable>
