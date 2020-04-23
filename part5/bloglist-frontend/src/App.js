@@ -36,20 +36,51 @@ const CurrentUser = ({user, setUser}) => {
     )
 }
 
+const NewBlog = ({title, setTitle, author, setAuthor, url, setUrl, user}) => {
+    const createBlog = () => {
+        const newBlog = {
+            title: title,
+            author: author,
+            url: url
+		}
+        blogService.create(newBlog, user.token)
+	}
+    return (
+        <form onSubmit={createBlog}>
+          <div>
+            <h1>Create new blog</h1>
+            <div>
+              title:<input type='text' value={title} name='title' onChange={({target}) => setTitle(target.value)}/>
+	        </div>
+            <div>
+              author:<input type='text' value={author} name='author' onChange={({target}) => setAuthor(target.value)}/>
+	        </div>
+            <div>
+              url:<input type='text' value={url} name='url' onChange={({target}) => setUrl(target.value)}/>
+	        </div>
+            <button type='submit'>Create</button>
+          </div>
+	    </form>
+    )
+}
+
 
 const App = () => {
     const [blogs, setBlogs] = useState([])
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [user, setUser] = useState(null)
+    const [title, setTitle] = useState('')
+    const [author, setAuthor] = useState('')
+    const [url, setUrl] = useState('')
     
     const handleLogin = async (event) => {
         event.preventDefault()
         try {
             const user = await loginService.login({username, password})
-            console.log(`Loggin in as ${username}`)
             window.localStorage.setItem('loggedUser', JSON.stringify(user))
 
+            // blogService.setToken(token)
             setUser(user)
             setUsername('')
             setPassword('')
@@ -74,7 +105,9 @@ const App = () => {
     useEffect(() => {
         const loggedUser = window.localStorage.getItem('loggedUser')
         if (loggedUser) {
-            setUser(JSON.parse(loggedUser))
+            const user = JSON.parse(loggedUser)
+            setUser(user)
+            // blogService.setToken(user.token)
 		}
     }, [])
 
@@ -85,6 +118,9 @@ const App = () => {
                                        password={password} setPassword={setPassword}/>}
           {user !== null && <CurrentUser user={user} setUser={setUser}/>}
           {user !== null && <BlogContent blogs={blogs}/>}
+          {user !== null && <NewBlog title={title} setTitle={setTitle}
+                                     author={author} setAuthor={setAuthor}
+                                     url={url} setUrl={setUrl} user={user}/>}
         </div>
     )
 }
