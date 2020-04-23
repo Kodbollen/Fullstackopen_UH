@@ -23,6 +23,19 @@ const BlogContent = ({blogs}) => (
     </div>
 )
 
+const CurrentUser = ({user, setUser}) => {
+    const logoutUser = () => {
+        setUser(null)
+        window.localStorage.removeItem('loggedUser')
+    }
+    return (
+        <div>
+          <p>Current user: {user.username}</p>
+          <button type='button' onClick={logoutUser}>Logout</button>
+	    </div>
+    )
+}
+
 
 const App = () => {
     const [blogs, setBlogs] = useState([])
@@ -35,32 +48,45 @@ const App = () => {
         try {
             const user = await loginService.login({username, password})
             console.log(`Loggin in as ${username}`)
+            window.localStorage.setItem('loggedUser', JSON.stringify(user))
+
             setUser(user)
             setUsername('')
             setPassword('')
 		} catch(exception) {
             
 		}
-
     }
 
 
-
-  useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
-  }, [])
-
+    useEffect(() => {
+        let ignore = false
+        async function fetchBlogs () {
+            const blogs = await blogService.getAll()
+            if (!ignore) {
+                setBlogs(blogs)
+            }
+        }
+        fetchBlogs()
+        return () => {ignore = true}
+    }, [])
+    
+    useEffect(() => {
+        const loggedUser = window.localStorage.getItem('loggedUser')
+        if (loggedUser) {
+            setUser(JSON.parse(loggedUser))
+		}
+    }, [])
 
     return (
         <div>
           {user === null && <LoginForm handleLogin={handleLogin}
                                        username={username} setUsername={setUsername}
                                        password={password} setPassword={setPassword}/>}
+          {user !== null && <CurrentUser user={user} setUser={setUser}/>}
           {user !== null && <BlogContent blogs={blogs}/>}
         </div>
-  )
+    )
 }
 
 export default App
