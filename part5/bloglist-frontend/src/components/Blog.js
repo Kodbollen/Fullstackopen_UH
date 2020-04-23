@@ -1,6 +1,6 @@
-import React, {useState, useImperativeHandle} from 'react'
+import React, {useState} from 'react'
 
-const Blog = React.forwardRef(({blog, putBlog}, ref) => {
+const Blog = ({blog, putBlog, deleteBlog, user}) => {
 	const blogStyle = {
         paddingTop: 10,
         paddingLeft: 2,
@@ -26,13 +26,13 @@ const Blog = React.forwardRef(({blog, putBlog}, ref) => {
         putBlog(updatedBlog)
 	}
 
-    const hideOnVisibility = {display: contentVisibility ? '' : 'none'}
-
-    useImperativeHandle(ref, ()=> {
-        return {
-            toggleVisibility
+    const removeBlog = () => {
+        if (window.confirm(`Remove blog '${blog.title}' by ${blog.author}`)) {
+            deleteBlog(blog)
 		}
-	})
+	}
+
+    const hideOnVisibility = {display: contentVisibility ? '' : 'none'}
 	
     return (
         <div style={blogStyle}>
@@ -41,10 +41,13 @@ const Blog = React.forwardRef(({blog, putBlog}, ref) => {
             <p>url: {blog.url}</p>
             <div>
               upvotes: {blog.upvotes}<button onClick={updateBlog}>upvote</button>
+              <div>
+                {user.username === blog.user.username ? <button onClick={removeBlog}>remove</button> : null}
+			  </div>
 			</div>
 		  </div>
         </div>
     )
-})
+}
 
 export default Blog

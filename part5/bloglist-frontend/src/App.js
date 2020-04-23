@@ -25,14 +25,14 @@ const LoginForm = ({handleLogin, username, setUsername, password, setPassword}) 
 	</form>
 )
 
-const BlogContent = ({blogs, updateBlog}) => {
+const BlogContent = ({blogs, updateBlog, deleteBlog, user}) => {
     const sorted = blogs.sort((a, b) => {
         return b.upvotes - a.upvotes
 	})
     return (
         <div>
           <h2>blogs</h2>
-          {sorted.map(blog => <Blog key={blog.id} blog={blog} putBlog={updateBlog}/>)}
+          {sorted.map(blog => <Blog key={blog.id} blog={blog} putBlog={updateBlog} deleteBlog={deleteBlog} user={user}/>)}
         </div>
     )
 }
@@ -92,6 +92,11 @@ const App = () => {
         setBlogs(blogs)
 	}
 
+    const deleteBlog = async (blogObject) => {
+        await blogService.remove(blogObject, user.token)
+        const blogs = await blogService.getAll()
+        setBlogs(blogs)        
+	}
 
     useEffect(() => {
         let ignore = false
@@ -129,7 +134,7 @@ const App = () => {
         <div>
           <InfoBar infoMessage={infoMessage} infoType={infoType}/>
           <CurrentUser user={user} setUser={setUser}/>
-          <BlogContent blogs={blogs} updateBlog={putBlog}/>
+          <BlogContent blogs={blogs} updateBlog={putBlog} deleteBlog={deleteBlog} user={user}/>
           <Togglable buttonLabel={'Create new blog'} ref={newBlogRef}>
             <NewBlog addBlog={addBlog}/>
 		  </Togglable>
