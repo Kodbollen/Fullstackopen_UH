@@ -44,7 +44,7 @@ const Blog = ({blog, putBlog, deleteBlog, user}) => {
             <div className='upvoteDiv'>
               upvotes: {blog.upvotes}<button className='upvoteButton' onClick={updateBlog}>upvote</button>
               <div>
-                {user.username === blog.user.username ? <button onClick={removeBlog}>remove</button> : null}
+            {user.username === blog.user.username ? <button className='removeBtn' onClick={removeBlog}>remove</button> : null}
               </div>
             </div>
           </div>

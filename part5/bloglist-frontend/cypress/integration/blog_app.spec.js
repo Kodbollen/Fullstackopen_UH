@@ -54,7 +54,14 @@ describe('Blog app', function() {
 			cy.get('.upvoteDiv').should('contain', '0')
 			cy.get('.upvoteButton').click()
 			cy.get('.upvoteDiv').should('contain', '1')
-			
+		})
+		it('Blog can be deleted', function() {
+			cy.createBlog({title: 'test blog', author: 'Testminister', url: 'test.url'})
+			cy.get('.toggleDetails').click()
+			cy.get('.removeBtn').click()
+
+			cy.request('GET', 'http://localhost:3001/api/blogs').its('body').should('have.length', 0)
+
 		})
 	})
 })
