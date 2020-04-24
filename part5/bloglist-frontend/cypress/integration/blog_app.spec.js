@@ -61,7 +61,17 @@ describe('Blog app', function() {
 			cy.get('.removeBtn').click()
 
 			cy.request('GET', 'http://localhost:3001/api/blogs').its('body').should('have.length', 0)
+		})
+		it('Blogs are sorted correctly when shown', function() {
+			cy.createBlog({title: 'test blog1', author: 'Testminister', url: 'test.url1', upvotes: '123'})
+			cy.createBlog({title: 'test blog2', author: 'Testminister', url: 'test.url2', upvotes: '1234'})
+			cy.createBlog({title: 'test blog3', author: 'Testminister', url: 'test.url3', upvotes: '1235'})
+			cy.createBlog({title: 'test blog4', author: 'Testminister', url: 'test.url4'})
 
+			cy.get('.blogDiv').should('contain', 'test blog3')
+			cy.get('.blogDiv').should('contain', 'test blog2')
+			cy.get('.blogDiv').should('contain', 'test blog1')
+			cy.get('.blogDiv').should('contain', 'test blog4')
 		})
 	})
 })
