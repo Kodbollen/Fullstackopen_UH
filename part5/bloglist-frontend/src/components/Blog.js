@@ -41,8 +41,8 @@ const Blog = ({blog, putBlog, deleteBlog, user}) => {
                                                </button>
           <div className='detailsDiv' style={hideOnVisibility}>
             <p>url: {blog.url}</p>
-            <div>
-              upvotes: {blog.upvotes}<button onClick={updateBlog}>upvote</button>
+            <div className='upvoteDiv'>
+              upvotes: {blog.upvotes}<button className='upvoteButton' onClick={updateBlog}>upvote</button>
               <div>
                 {user.username === blog.user.username ? <button onClick={removeBlog}>remove</button> : null}
               </div>

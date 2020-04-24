@@ -43,8 +43,18 @@ describe('Blog app', function() {
 
 			cy.get('.toggleDetails').should('contain', 'details')
 
-			cy.request('GET', 'http://localhost:3001/api/blogs').its('body').should('have.length', 1)
+			cy.createBlog({title: 'test blog2', author: 'Testminister', url: 'test.url2'})
 
+			cy.request('GET', 'http://localhost:3001/api/blogs').its('body').should('have.length', 2)
+		})
+		it('Blog can be upvoted', function() {
+			cy.createBlog({title: 'test blog', author: 'Testminister', url: 'test.url'})
+			cy.get('.toggleDetails').click()
+
+			cy.get('.upvoteDiv').should('contain', '0')
+			cy.get('.upvoteButton').click()
+			cy.get('.upvoteDiv').should('contain', '1')
+			
 		})
 	})
 })
