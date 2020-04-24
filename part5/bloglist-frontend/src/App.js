@@ -123,6 +123,7 @@ const App = () => {
     if (user === null) {
         return (
             <div>
+              <InfoBar infoMessage={infoMessage} infoType={infoType}/>
               <LoginForm handleLogin={handleLogin}
                                        username={username} setUsername={setUsername}
                                        password={password} setPassword={setPassword}

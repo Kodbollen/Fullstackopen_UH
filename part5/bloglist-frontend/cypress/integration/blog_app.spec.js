@@ -1,4 +1,3 @@
-
 describe('Blog app', function() {
 	beforeEach(function() {
 		cy.request('POST', 'http://localhost:3001/api/testing/reset')
@@ -19,5 +18,12 @@ describe('Blog app', function() {
 		cy.get('#username').type('root')
 		cy.get('#password').type('goodpassword')
 		cy.get('#loginButton').click()
+	})
+	it('Login - should fail on wrong credentials', function() {
+		cy.visit('http://localhost:3000')
+		cy.get('#username').type('root')
+		cy.get('#password').type('faultypassword')
+		cy.get('#loginButton').click()
+		cy.get('.error').contains('failed')
 	})
 })
