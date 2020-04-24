@@ -32,25 +32,22 @@ const Blog = ({blog, putBlog, deleteBlog, user}) => {
         }
     }
 
-    const details = () => (
-        <div>
-          <p>url: {blog.url}</p>
-          <div>
-            upvotes: {blog.upvotes}<button onClick={updateBlog}>upvote</button>
-            <div>
-              {user.username === blog.user.username ? <button onClick={removeBlog}>remove</button> : null}
-            </div>
-          </div>
-        </div>
-	)
+    const hideOnVisibility = {display: contentVisibility ? '' : 'none'}
 
     return (
         <div style={blogStyle}>
           {blog.title} written by {blog.author}<button className='toggleDetails' onClick={toggleVisibility}>
                                                  {contentVisibility ? 'show' : 'hide'} details
                                                </button>
-          {contentVisibility ? details() : null}
-          
+          <div className='detailsDiv' style={hideOnVisibility}>
+            <p>url: {blog.url}</p>
+            <div>
+              upvotes: {blog.upvotes}<button onClick={updateBlog}>upvote</button>
+              <div>
+                {user.username === blog.user.username ? <button onClick={removeBlog}>remove</button> : null}
+              </div>
+            </div>
+          </div>
         </div>
     )
 }

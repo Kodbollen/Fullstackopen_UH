@@ -24,17 +24,16 @@ beforeEach(() => {
 test('Only renders title and author by default', () => {
 	const component = render(<Blog blog={testBlog} user={user}/>)
 
-    expect(component.container).toHaveTextContent('Test blog')
-    expect(component.container).toHaveTextContent('Testminister')
-    expect(component.container).not.toHaveTextContent('test.test')
-    expect(component.container).not.toHaveTextContent('123')
+    const div = component.container.querySelector('.detailsDiv')
+
+    expect(div).toHaveStyle('display: none')
 })
 
 test('Url and upvote count is showed after toggling show blog details', () => {
     const component = render(<Blog blog={testBlog} user={user}/>)
     const button = component.container.querySelector('.toggleDetails')
     fireEvent.click(button)
+    const div = component.container.querySelector('.detailsDiv')
 
-    expect(component.container).toHaveTextContent('test.test')
-    expect(component.container).toHaveTextContent('123')
+    expect(div).not.toHaveStyle('display: none')
 })
