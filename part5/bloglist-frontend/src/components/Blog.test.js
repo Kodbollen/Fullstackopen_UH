@@ -37,3 +37,13 @@ test('Url and upvote count is showed after toggling show blog details', () => {
 
     expect(div).not.toHaveStyle('display: none')
 })
+
+test('Clicking like button properly calls function', () => {
+    const mockHandler = jest.fn()
+
+    const component = render(<Blog blog={testBlog} user={user} putBlog={mockHandler}/>)
+    const button = component.getByText('upvote')
+    fireEvent.click(button)
+    fireEvent.click(button)
+    expect(mockHandler.mock.calls).toHaveLength(2)
+})
