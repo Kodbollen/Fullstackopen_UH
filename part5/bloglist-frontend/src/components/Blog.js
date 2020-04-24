@@ -35,7 +35,7 @@ const Blog = ({blog, putBlog, deleteBlog, user}) => {
     const hideOnVisibility = {display: contentVisibility ? '' : 'none'}
 
     return (
-        <div style={blogStyle}>
+        <div className='blogDiv' style={blogStyle}>
           {blog.title} written by {blog.author}<button className='toggleDetails' onClick={toggleVisibility}>
                                                  {contentVisibility ? 'hide' : 'show'} details
                                                </button>
