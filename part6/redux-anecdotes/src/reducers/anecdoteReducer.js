@@ -21,10 +21,13 @@ const reducer = (state = [], action) => {
 	return state
 }
 
-export const addVote = (id) => {
-	return {
-		type: 'ADD_VOTE',
-		data: {id}
+export const addVote = (anecdote) => {
+	return async dispatch => {
+		const updatedAnecdote = await anecdoteService.incrementVote(anecdote)
+		dispatch({
+			type: 'ADD_VOTE',
+			data: anecdote
+		})
 	}
 }
 

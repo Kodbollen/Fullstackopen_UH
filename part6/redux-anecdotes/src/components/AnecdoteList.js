@@ -32,7 +32,7 @@ const AnecdoteList = (props) => {
     }
 
     const clickHandler = (anecdote) => {
-        dispatch(addVote(anecdote.id))
+        dispatch(addVote(anecdote))
         const message = `You voted for '${anecdote.content}'`
         dispatch(setNotification(message))
         setTimeout(() => {
