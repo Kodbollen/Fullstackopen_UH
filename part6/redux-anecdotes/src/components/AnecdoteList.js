@@ -20,8 +20,16 @@ const Anecdote = ({anecdote, clickHandler}) => {
 
 const AnecdoteList = (props) => {
     const dispatch = useDispatch()
-    const anecdotes = useSelector(state => state.anecdotes)
-    anecdotes.sort((a, b) => b.votes - a.votes)
+    const allAnecdotes = useSelector(state => state.anecdotes)
+    const filter = useSelector(state => state.filter)
+    let anecdotes
+
+    if (filter) {
+        anecdotes = allAnecdotes.filter(anecdote => anecdote.content.toLowerCase().includes(filter.toLowerCase()))
+        anecdotes.sort((a, b) => b.votes - a.votes)
+    } else {
+        anecdotes = allAnecdotes.sort((a, b) => b.votes - a.votes)
+    }
 
     const clickHandler = (anecdote) => {
         dispatch(addVote(anecdote.id))
