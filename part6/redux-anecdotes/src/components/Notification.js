@@ -9,7 +9,7 @@ const Notification = () => {
 		borderWidth: 1
 	}
 	return (
-		<div style={style}>
+		<div style={notification ? style : {display: ''}}>
           {notification}
 		</div>
 	)
