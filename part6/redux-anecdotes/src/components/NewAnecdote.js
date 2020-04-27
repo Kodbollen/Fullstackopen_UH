@@ -16,10 +16,7 @@ const NewAnecdote = (props) => {
         dispatch(addAnecdote(content))
 
         const message = `You created '${content}'`
-        dispatch(setNotification(message))
-        setTimeout(() => {
-            dispatch(removeNotification())
-        }, 5000)
+        dispatch(setNotification(message, 5))
 	}
 
     return (

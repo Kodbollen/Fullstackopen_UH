@@ -34,10 +34,7 @@ const AnecdoteList = (props) => {
     const clickHandler = (anecdote) => {
         dispatch(addVote(anecdote))
         const message = `You voted for '${anecdote.content}'`
-        dispatch(setNotification(message))
-        setTimeout(() => {
-            dispatch(removeNotification())
-		}, 5000)
+        dispatch(setNotification(message, 5))
 	}
 
     return (
