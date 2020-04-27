@@ -23,7 +23,6 @@ const reducer = (state = [], action) => {
 
 export const addVote = (anecdote) => {
 	return async dispatch => {
-		const updatedAnecdote = await anecdoteService.incrementVote(anecdote)
 		dispatch({
 			type: 'ADD_VOTE',
 			data: anecdote
