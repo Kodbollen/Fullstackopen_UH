@@ -1,6 +1,4 @@
 import React from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import {addVote} from './reducers/anecdoteReducer'
 import NewAnecdote from './components/NewAnecdote'
 import AnecdoteList from './components/AnecdoteList'
 
