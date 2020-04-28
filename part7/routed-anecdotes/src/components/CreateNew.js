@@ -8,6 +8,11 @@ const CreateNew = ({anecdotes, setAnecdotes, notification, setNotification}) => 
     
     const [timerId, setTimerId] = useState('')
 
+    const excludeReset = (useFieldObject) => {
+        const {reset, ...rest} = useFieldObject
+        return rest
+	}
+
     const createNotification = (message) => {
         setNotification(`You created '${message}'`)
         if (timerId) {
@@ -49,15 +54,15 @@ const CreateNew = ({anecdotes, setAnecdotes, notification, setNotification}) => 
           <form onSubmit={handleSubmit}>
             <div>
               content
-              <input name='content' {...content} />
+              <input {...excludeReset(content)} />
             </div>
             <div>
               author
-              <input name='author' {...author} />
+              <input {...excludeReset(author)} />
             </div>
             <div>
               url for more info
-              <input name='info' {...info}/>
+              <input {...excludeReset(info)}/>
             </div>
             <button>create</button>
             <button type='button' onClick={resetAll}>reset form</button>
