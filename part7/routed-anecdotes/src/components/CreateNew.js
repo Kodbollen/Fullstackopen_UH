@@ -37,6 +37,11 @@ const CreateNew = ({anecdotes, setAnecdotes, notification, setNotification}) => 
             votes: 0,
         })
     }
+    const resetAll = () => {
+        content.reset()
+        author.reset()
+        info.reset()
+	}
 
     return (
         <div>
@@ -55,6 +60,7 @@ const CreateNew = ({anecdotes, setAnecdotes, notification, setNotification}) => 
               <input name='info' {...info}/>
             </div>
             <button>create</button>
+            <button type='button' onClick={resetAll}>reset form</button>
           </form>
         </div>
     )
