@@ -1,4 +1,8 @@
 import React, {useState} from 'react'
+import {
+	BrowserRouter as Router,
+	Switch, Route, Link, useHistory, useParams
+} from 'react-router-dom'
 
 const AnecdoteList = ({anecdotes, setAnecdotes}) => {
 
@@ -15,14 +19,39 @@ const AnecdoteList = ({anecdotes, setAnecdotes}) => {
 
         setAnecdotes(anecdotes.map(a => a.id === id ? voted : a))
     }
+
+    const id = useParams().id
+    if (id) {
+        const anecdote = anecdotes.find(a => a.id === id)
+        return (
+            <div>
+              <h2>{anecdote.content}</h2>
+              <p>Has {anecdote.votes} votes</p>
+              <div>
+                For more info see <a href={anecdote.info}>{anecdote.info}</a>
+              </div>
+			</div>
+		)
+	}
+
 	return(
 		<div>
           <h2>Anecdotes</h2>
           <ul>
-            {anecdotes.map(anecdote => <li key={anecdote.id} >{anecdote.content}</li>)}
+            {anecdotes.map(anecdote =>
+                           <li key={anecdote.id}>
+                             <Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
+                           </li>)}
           </ul>
         </div>
     )
 }
 
 export default AnecdoteList
+
+
+
+
+
+
+

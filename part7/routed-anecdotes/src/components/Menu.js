@@ -30,7 +30,7 @@ const Menu = () => {
     return (
         <Router>
           <div>
-            <Link style={padding} to='/'>anecdotes</Link>
+            <Link style={padding} to='/anecdotes'>anecdotes</Link>
             <Link style={padding} to='/create'>create new</Link>
             <Link style={padding} to='/about'>about</Link>
 		  </div>
@@ -41,6 +41,12 @@ const Menu = () => {
 			</Route>
             <Route path='/about'>
               <About />
+			</Route>
+            <Route path='/anecdotes/:id'>
+              <AnecdoteList anecdotes={anecdotes} setAnecdotes={setAnecdotes} />
+			</Route>
+            <Route path='/anecdotes'>
+              <AnecdoteList anecdotes={anecdotes} setAnecdotes={setAnecdotes} />
 			</Route>
             <Route path='/'>
               <AnecdoteList anecdotes={anecdotes} setAnecdotes={setAnecdotes} />
