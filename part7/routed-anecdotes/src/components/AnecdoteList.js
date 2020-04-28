@@ -1,7 +1,6 @@
-import React, {useState} from 'react'
+import React from 'react'
 import {
-	BrowserRouter as Router,
-	Switch, Route, Link, useHistory, useParams
+    Link, useParams
 } from 'react-router-dom'
 
 const AnecdoteList = ({anecdotes, setAnecdotes}) => {

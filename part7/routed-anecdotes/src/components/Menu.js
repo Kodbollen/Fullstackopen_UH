@@ -1,13 +1,16 @@
 import React, {useState} from 'react'
 import {
 	BrowserRouter as Router,
-	Switch, Route, Link, useHistory
+	Switch, Route, Link
 } from 'react-router-dom'
+
+import Notification from './Notification'
 import AnecdoteList from './AnecdoteList'
 import CreateNew from './CreateNew'
 import About from './About'
 
 const Menu = () => {
+    const [notification, setNotification] = useState('')
     const [anecdotes, setAnecdotes] = useState([
         {
             content: 'If it hurts, do it more often',
@@ -34,10 +37,12 @@ const Menu = () => {
             <Link style={padding} to='/create'>create new</Link>
             <Link style={padding} to='/about'>about</Link>
 		  </div>
+          <Notification notification={notification}/>
 
           <Switch>
             <Route path='/create'>
-              <CreateNew anecdotes={anecdotes} setAnecdotes={setAnecdotes}/>
+              <CreateNew anecdotes={anecdotes} setAnecdotes={setAnecdotes}
+                         notification={notification} setNotification={setNotification}/>
 			</Route>
             <Route path='/about'>
               <About />

@@ -1,13 +1,28 @@
 import React, { useState } from 'react'
 
-const CreateNew = ({anecdotes, setAnecdotes}) => {
+const CreateNew = ({anecdotes, setAnecdotes, notification, setNotification}) => {
     const [content, setContent] = useState('')
     const [author, setAuthor] = useState('')
     const [info, setInfo] = useState('')
+    const [timerId, setTimerId] = useState('')
 
+    const createNotification = (message) => {
+        setNotification(`You created '${message}'`)
+        if (timerId) {
+            clearTimeout(timerId)
+            setTimerId('')
+		}
+        const nId = setTimeout(() => {
+            setNotification('')
+            setTimerId('')
+		}, 10000)
+        setTimerId(nId)
+	}
     const addNew = (anecdote) => {
         anecdote.id = (Math.random() * 10000).toFixed(0)
         setAnecdotes(anecdotes.concat(anecdote))
+        createNotification(anecdote.content)
+
     }
 
     const handleSubmit = (e) => {
