@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
+import {useField} from '../hooks'
 
 const CreateNew = ({anecdotes, setAnecdotes, notification, setNotification}) => {
-    const [content, setContent] = useState('')
-    const [author, setAuthor] = useState('')
-    const [info, setInfo] = useState('')
+    const content = useField('text')
+    const author = useField('text')
+    const info = useField('text')
+    
     const [timerId, setTimerId] = useState('')
 
     const createNotification = (message) => {
@@ -20,6 +22,7 @@ const CreateNew = ({anecdotes, setAnecdotes, notification, setNotification}) => 
 	}
     const addNew = (anecdote) => {
         anecdote.id = (Math.random() * 10000).toFixed(0)
+        console.log(anecdote)
         setAnecdotes(anecdotes.concat(anecdote))
         createNotification(anecdote.content)
 
@@ -28,10 +31,10 @@ const CreateNew = ({anecdotes, setAnecdotes, notification, setNotification}) => 
     const handleSubmit = (e) => {
         e.preventDefault()
         addNew({
-            content,
-            author,
-            info,
-            votes: 0
+            content: content.value,
+            author: author.value,
+            info: info.value,
+            votes: 0,
         })
     }
 
@@ -41,15 +44,15 @@ const CreateNew = ({anecdotes, setAnecdotes, notification, setNotification}) => 
           <form onSubmit={handleSubmit}>
             <div>
               content
-              <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
+              <input name='content' {...content} />
             </div>
             <div>
               author
-              <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
+              <input name='author' {...author} />
             </div>
             <div>
               url for more info
-              <input name='info' value={info} onChange={(e)=> setInfo(e.target.value)} />
+              <input name='info' {...info}/>
             </div>
             <button>create</button>
           </form>
