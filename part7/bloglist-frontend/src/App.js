@@ -8,7 +8,7 @@ import LoginForm from './components/LoginForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import {setUser} from './reducers/userReducer'
-
+import {initialiseBlogs, upvoteBlog, removeBlog} from './reducers/blogReducer'
 import './App.css'
 
 const InfoBar = ({infoMessage, infoType}) => {
@@ -18,14 +18,30 @@ const InfoBar = ({infoMessage, infoType}) => {
     )
 }
 
-const BlogContent = ({blogs, updateBlog, deleteBlog, user}) => {
+const BlogContent = () => {
+    const dispatch = useDispatch()
+    const user = useSelector(state => state.user)
+    const blogs = useSelector(state => state.blogs)
     const sorted = blogs.sort((a, b) => {
         return b.upvotes - a.upvotes
 	})
+
+    const putBlog = async (blogObject) => {
+        // await blogService.put(blogObject, user.token)
+        // const blogs = await blogService.getAll()
+        // setBlogs(blogs)
+        dispatch()
+	}
+
+    const deleteBlog = async (blogObject) => {
+        await blogService.remove(blogObject, user.token)
+        const blogs = await blogService.getAll()
+        // setBlogs(blogs)
+	}
     return (
         <div>
           <h2>blogs</h2>
-          {sorted.map(blog => <Blog key={blog.id} blog={blog} putBlog={updateBlog} deleteBlog={deleteBlog} user={user}/>)}
+          {sorted.map(blog => <Blog key={blog.id} blog={blog} putBlog={upvoteBlog} deleteBlog={deleteBlog} user={user}/>)}
         </div>
     )
 }
@@ -34,7 +50,6 @@ const BlogContent = ({blogs, updateBlog, deleteBlog, user}) => {
 
 const App = () => {
     const dispatch = useDispatch()
-    const [blogs, setBlogs] = useState([])
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
 
@@ -53,37 +68,15 @@ const App = () => {
 		}, 5000)
 	}
 
-    const putBlog = async (blogObject) => {
-        await blogService.put(blogObject, user.token)
-        const blogs = await blogService.getAll()
-        setBlogs(blogs)
-	}
-
-    const deleteBlog = async (blogObject) => {
-        await blogService.remove(blogObject, user.token)
-        const blogs = await blogService.getAll()
-        setBlogs(blogs)
-	}
-
     useEffect(() => {
-        let ignore = false
-        async function fetchBlogs () {
-            const blogs = await blogService.getAll()
-            if (!ignore) {
-                setBlogs(blogs)
-            }
-        }
-        fetchBlogs()
-        return () => {ignore = true}
-    }, [])
+        dispatch(initialiseBlogs())
+    }, [dispatch])
 
     useEffect(() => {
         const loggedUser = window.localStorage.getItem('loggedUser')
         if (loggedUser) {
             const user = JSON.parse(loggedUser)
-            console.log('øasdfasdf')
-            console.log(user)
-            setUser(user)
+            dispatch(setUser(user))
 		}
     }, [])
 
@@ -101,7 +94,7 @@ const App = () => {
         <div>
           <InfoBar infoMessage={infoMessage} infoType={infoType}/>
           <CurrentUser />
-          <BlogContent blogs={blogs} updateBlog={putBlog} deleteBlog={deleteBlog} user={user}/>
+          <BlogContent />
           <Togglable buttonLabel={'Create new blog'} ref={newBlogRef}>
             <NewBlog addBlog={addBlog}/>
           </Togglable>

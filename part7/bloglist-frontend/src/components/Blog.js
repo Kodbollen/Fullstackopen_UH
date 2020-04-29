@@ -1,6 +1,8 @@
 import React, {useState} from 'react'
+import {useDispatch, useSelector} from 'react-redux'
+import {upvoteBlog, removeBlog} from '../reducers/blogReducer'
 
-const Blog = ({blog, putBlog, deleteBlog, user}) => {
+const Blog = ({blog}) => {
     const blogStyle = {
         paddingTop: 10,
         paddingLeft: 2,
@@ -8,6 +10,8 @@ const Blog = ({blog, putBlog, deleteBlog, user}) => {
         borderWidth: 1,
         marginBottom: 5
     }
+	const dispatch = useDispatch()
+	const user = useSelector(state => state.user)
     const [contentVisibility, setContentVisibility] = useState(false)
 
     const toggleVisibility = () => {
@@ -15,20 +19,12 @@ const Blog = ({blog, putBlog, deleteBlog, user}) => {
     }
 
     const updateBlog = () => {
-        const updatedBlog = {
-            _id: blog.id,
-            title: blog.title,
-            author: blog.author,
-            url: blog.url,
-            upvotes: blog.upvotes + 1,
-            user: blog.user
-        }
-        putBlog(updatedBlog)
+        dispatch(upvoteBlog(blog, user.token))
     }
 
     const removeBlog = () => {
         if (window.confirm(`Remove blog '${blog.title}' by ${blog.author}`)) {
-            deleteBlog(blog)
+            // deleteBlog(blog)
         }
     }
 
