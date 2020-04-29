@@ -9,6 +9,10 @@ const reducer = combineReducers({
 	user: userReducer
 })
 
-const store = createStore(reducer)
+const store = createStore(
+	reducer,
+	composeWithDevTools(
+		applyMiddleware(thunk))
+)
 
 export default store

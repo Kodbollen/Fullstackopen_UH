@@ -14,7 +14,7 @@ export const setUser = (user) => {
 	return async dispatch => {
 		dispatch({
 			type: 'SET_USER',
-			data: user
+			data: {user}
 		})
 	}
 }
