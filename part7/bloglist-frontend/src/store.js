@@ -5,12 +5,14 @@ import blogReducer from './reducers/blogReducer'
 import userReducer from './reducers/userReducer'
 import notificationReducer from './reducers/notificationReducer'
 import timeutReducer from './reducers/timeoutReducer'
+import infoUserReducer from './reducers/infoUserReducer'
 
 const reducer = combineReducers({
 	blogs: blogReducer,
 	user: userReducer,
 	notification: notificationReducer,
-	timeoutId: timeutReducer
+	timeoutId: timeutReducer,
+	usersInfo: infoUserReducer
 })
 
 const store = createStore(

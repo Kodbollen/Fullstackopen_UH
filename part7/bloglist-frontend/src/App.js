@@ -1,13 +1,13 @@
 import React, {useEffect} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
-import NewBlog from './components/NewBlog'
-import Togglable from './components/Togglable'
-import CurrentUser from './components/CurrentUser'
-import LoginForm from './components/LoginForm'
-import BlogContent from './components/BlogContent'
+import {BrowserRouter as Router, Switch, Route, Link} from 'react-router-dom'
 import Notification from './components/Notification'
+import LoginForm from './components/LoginForm'
+import BlogPage from './pages/BlogPage'
+import UsersPage from './pages/UsersPage'
 import {setUser} from './reducers/userReducer'
 import {initialiseBlogs} from './reducers/blogReducer'
+import {initialiseUsers} from './reducers/infoUserReducer'
 import './App.css'
 
 const App = () => {
@@ -17,6 +17,7 @@ const App = () => {
 
     useEffect(() => {
         dispatch(initialiseBlogs())
+        dispatch(initialiseUsers())
     }, [dispatch])
 
     useEffect(() => {
@@ -27,8 +28,6 @@ const App = () => {
 		}
     }, [])
 
-    const newBlogRef = React.createRef()
-
     if (user === null) {
         return (
             <div>
@@ -38,14 +37,19 @@ const App = () => {
         )
     }
     return (
-        <div>
-          <Notification />
-          <CurrentUser />
-          <BlogContent />
-          <Togglable buttonLabel={'Create new blog'} ref={newBlogRef}>
-            <NewBlog />
-          </Togglable>
-        </div>
+        <Router>
+          <Switch>
+            <Route path='/blogs'>
+              <BlogPage />
+            </Route>
+            <Route path='/users'>
+              <UsersPage />
+		    </Route>
+            <Route path='/'>
+              <BlogPage />
+            </Route>
+          </Switch>
+        </Router>
     )
 }
 
