@@ -1,12 +1,11 @@
 import React from 'react'
-import {useDispatch, useSelector} from 'react-redux'
+import {useSelector} from 'react-redux'
 
 import Blog from './Blog'
 
 const BlogContent = () => {
-    const dispatch = useDispatch()
-    const user = useSelector(state => state.user)
     const blogs = useSelector(state => state.blogs)
+
     const sorted = blogs.sort((a, b) => {
         return b.upvotes - a.upvotes
 	})

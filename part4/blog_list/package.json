@@ -21,7 +21,8 @@
 		"jsonwebtoken": "^8.5.1",
 		"mongoose": "^5.9.9",
 		"mongoose-unique-validator": "^2.0.3",
-		"morgan": "^1.10.0"
+		"morgan": "^1.10.0",
+		"react-router-dom": "^5.1.2"
 	},
 	"devDependencies": {
 		"eslint": "^6.8.0",

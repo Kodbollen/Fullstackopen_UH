@@ -4,6 +4,7 @@ const reducer = (state = {}, action) => {
 		return action.data
 	case 'REMOVE_MESSAGE':
 		return {}
+	default:
 	}
 	return state
 }

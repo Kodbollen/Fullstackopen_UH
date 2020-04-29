@@ -1,11 +1,10 @@
-import loginService from '../services/login'
-
 const reducer = (state = null, action) => {
 	switch(action.type) {
 	case 'SET_USER':
 		return action.data.user
 	case 'REMOVE_USER':
 		return null
+	default:
 	}
 	return state
 }

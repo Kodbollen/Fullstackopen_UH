@@ -14,6 +14,7 @@ const reducer = (state = [], action) => {
 		return state.map(blog => blog.id === idToUpdate ? updatedBlog : blog)
 	case 'INITIALISE_BLOGS':
 		return action.data
+	default:
 	}
 	return state
 }
@@ -30,7 +31,7 @@ export const addBlog = (blog, token) => {
 
 export const removeBlog = (blog, token) => {
 	return async dispatch => {
-		const response = await blogService.remove(blog, token)
+		await blogService.remove(blog, token)
 		dispatch({
 			type: 'REMOVE_BLOG',
 			data: {id: blog.id}
@@ -42,7 +43,7 @@ export const upvoteBlog = (blog, token) => {
 	return async dispatch => {
 		const {id, ...noId} = blog
 		const newObject = {_id: id, upvotes: noId.upvotes + 1, author: blog.author, title: blog.title, url: blog.url, user:blog.user}
-		const updated = await blogService.put(newObject, token)
+		await blogService.put(newObject, token)
 		dispatch({
 			type: 'ADD_VOTE',
 			data: {id: blog.id}
