@@ -22,9 +22,9 @@ const Blog = ({blog}) => {
         dispatch(upvoteBlog(blog, user.token))
     }
 
-    const removeBlog = () => {
+    const deleteBlog = () => {
         if (window.confirm(`Remove blog '${blog.title}' by ${blog.author}`)) {
-            // deleteBlog(blog)
+            dispatch(removeBlog(blog, user.token))
         }
     }
 
@@ -40,7 +40,7 @@ const Blog = ({blog}) => {
             <div className='upvoteDiv'>
               upvotes: {blog.upvotes}<button className='upvoteButton' onClick={updateBlog}>upvote</button>
               <div>
-            {user.username === blog.user.username ? <button className='removeBtn' onClick={removeBlog}>remove</button> : null}
+            {user.username === blog.user.username ? <button className='removeBtn' onClick={deleteBlog}>remove</button> : null}
               </div>
             </div>
           </div>

@@ -32,9 +32,9 @@ export const addBlog = (blog) => {
 	}
 }
 
-export const removeBlog = (blog) => {
+export const removeBlog = (blog, token) => {
 	return async dispatch => {
-		await blogService.remove(blog)
+		const response = await blogService.remove(blog, token)
 		dispatch({
 			type: 'REMOVE_BLOG',
 			data: {id: blog.id}
