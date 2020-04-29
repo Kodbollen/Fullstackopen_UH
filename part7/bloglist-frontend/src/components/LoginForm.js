@@ -3,12 +3,27 @@ import {useDispatch, useSelector} from 'react-redux'
 import {useField} from '../hooks'
 import loginService from '../services/login'
 import {setUser} from '../reducers/userReducer'
+import {setNotification, removeNotification} from '../reducers/notificationReducer'
+import {addTimeout, removeTimeout} from '../reducers/timeoutReducer'
 
 const LoginForm = () => {
     const dispatch = useDispatch()
     const username = useField('text')
     const password = useField('password')
+    const timeoutId = useSelector(state => state.timeoutId)
+    
 
+    const createNotification = (message) => {
+        if (timeoutId) {
+            clearTimeout(timeoutId)
+        }
+        dispatch(setNotification(message, 'error'))
+        const nId = setTimeout(() => {
+            dispatch(removeNotification())
+            dispatch(removeTimeout())
+		}, 5000)
+        dispatch(addTimeout(nId))
+	}
     const handleLogin = async (event) => {
         event.preventDefault()
         try {
@@ -18,12 +33,7 @@ const LoginForm = () => {
 
             dispatch(setUser(user))
 		} catch(exception) {
-            console.log(exception.message)
-            // setInfoType('error')
-            // setInfoMessage(exception.message)
-            // setTimeout(() => {
-            //     setInfoMessage('')
-			// }, 5000)
+            createNotification(exception.message)
 		}
     }
 

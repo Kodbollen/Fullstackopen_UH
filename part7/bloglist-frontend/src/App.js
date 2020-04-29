@@ -5,16 +5,11 @@ import Togglable from './components/Togglable'
 import CurrentUser from './components/CurrentUser'
 import LoginForm from './components/LoginForm'
 import BlogContent from './components/BlogContent'
+import Notification from './components/Notification'
 import {setUser} from './reducers/userReducer'
 import {initialiseBlogs} from './reducers/blogReducer'
 import './App.css'
 
-const InfoBar = ({infoMessage, infoType}) => {
-    if (infoMessage === '') return null
-    return (
-        <div className={infoType}>{infoMessage}</div>
-    )
-}
 const App = () => {
     const dispatch = useDispatch()
 
@@ -37,14 +32,14 @@ const App = () => {
     if (user === null) {
         return (
             <div>
-              <InfoBar />
+              <Notification />
               <LoginForm />
 			</div>
         )
     }
     return (
         <div>
-          <InfoBar />
+          <Notification />
           <CurrentUser />
           <BlogContent />
           <Togglable buttonLabel={'Create new blog'} ref={newBlogRef}>
