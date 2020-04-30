@@ -3,8 +3,10 @@ import {useDispatch, useSelector} from 'react-redux'
 import {BrowserRouter as Router, Switch, Route, Link} from 'react-router-dom'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
+import CurrentUser from './components/CurrentUser'
 import BlogPage from './pages/BlogPage'
 import UsersPage from './pages/UsersPage'
+import SingleUserPage from './pages/SingleUserPage'
 import {setUser} from './reducers/userReducer'
 import {initialiseBlogs} from './reducers/blogReducer'
 import {initialiseUsers} from './reducers/infoUserReducer'
@@ -38,10 +40,14 @@ const App = () => {
     }
     return (
         <Router>
+          <CurrentUser />
           <Switch>
             <Route path='/blogs'>
               <BlogPage />
             </Route>
+            <Route path='/users/:id'>
+              <SingleUserPage />
+		    </Route>
             <Route path='/users'>
               <UsersPage />
 		    </Route>

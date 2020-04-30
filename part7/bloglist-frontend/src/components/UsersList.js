@@ -1,19 +1,25 @@
 import React from 'react'
 import {useSelector} from 'react-redux'
+import {Link} from 'react-router-dom'
 
 const User = (user) => {
     if (!user) return null
+    console.log(user)
     return (
         <tr>
-          <td>{user.user.name}</td>
-          <td>{user.user.blogs.length}</td>
+          <td>
+            <Link to={`/users/${user.user.id}`}>{user.user.name}</Link>
+          </td>
+          <td>
+            {user.user.blogs.length}
+          </td>
 	    </tr>
     )
 }
 
 const UsersList = () => {
     const users = useSelector(state => state.usersInfo)
-
+    console.log(users)
 
     return (
         <div>
