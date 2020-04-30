@@ -3,6 +3,7 @@ import {useDispatch, useSelector} from 'react-redux'
 import {removeUser} from '../reducers/userReducer'
 
 const CurrentUser = () => {
+    const padding = {paddingLeft: 10}
     const dispatch = useDispatch()
     const user = useSelector(state => state.user)
 
@@ -12,8 +13,8 @@ const CurrentUser = () => {
     }
     return (
         <div>
-          <p>Current user: {user.username}</p>
-          <button type='button' onClick={logoutUser}>Logout</button>
+          Current user: {user.username}
+		  <button style={padding}type='button' onClick={logoutUser}>Logout</button>
         </div>
     )
 }

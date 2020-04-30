@@ -14,6 +14,9 @@ import {initialiseUsers} from './reducers/infoUserReducer'
 import './App.css'
 
 const App = () => {
+    const padding = {
+        paddingRight: 5
+    }
     const dispatch = useDispatch()
 
     const user = useSelector(state => state.user)
@@ -41,7 +44,13 @@ const App = () => {
     }
     return (
         <Router>
-          <CurrentUser />
+          <div>
+            <Link style={padding} to='/blogs'>blogs</Link>
+            <Link style={padding} to='/users'>users</Link>
+            <CurrentUser />
+            <Notification />
+		  </div>
+
           <Switch>
             <Route path='/blogs/:id'>
               <SingleBlogPage />
