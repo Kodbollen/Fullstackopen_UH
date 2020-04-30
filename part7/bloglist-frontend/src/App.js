@@ -7,6 +7,7 @@ import CurrentUser from './components/CurrentUser'
 import BlogPage from './pages/BlogPage'
 import UsersPage from './pages/UsersPage'
 import SingleUserPage from './pages/SingleUserPage'
+import SingleBlogPage from './pages/SingleBlogPage'
 import {setUser} from './reducers/userReducer'
 import {initialiseBlogs} from './reducers/blogReducer'
 import {initialiseUsers} from './reducers/infoUserReducer'
@@ -42,6 +43,9 @@ const App = () => {
         <Router>
           <CurrentUser />
           <Switch>
+            <Route path='/blogs/:id'>
+              <SingleBlogPage />
+		    </Route>            
             <Route path='/blogs'>
               <BlogPage />
             </Route>
