@@ -22,10 +22,14 @@ const blogSchema = mongoose.Schema({
 		type: Number,
 		required: true
 	},
+	comments: [{
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Comment'
+	}],
 	user: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'User'
-	}
+	}	
 })
 
 blogSchema.plugin(uniqueValidator)
