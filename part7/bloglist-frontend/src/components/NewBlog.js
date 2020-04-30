@@ -35,8 +35,8 @@ const NewBlog = () => {
         }
         dispatch(addBlog(newBlog, user.token))
         createNotification(`you created: '${newBlog.title}' by ${newBlog.author}`)
-        
     }
+
     return (
         <form onSubmit={createBlog}>
             <div>

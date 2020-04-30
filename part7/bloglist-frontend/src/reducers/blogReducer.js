@@ -1,4 +1,5 @@
 import blogService from '../services/blogs'
+import commentService from '../services/comments'
 
 const reducer = (state = [], action) => {
 	switch(action.type) {
@@ -12,6 +13,10 @@ const reducer = (state = [], action) => {
 		const blogToUpdate = state.find(blog => blog.id === idToUpdate)
 		const updatedBlog = {...blogToUpdate, upvotes: blogToUpdate.upvotes + 1}
 		return state.map(blog => blog.id === idToUpdate ? updatedBlog : blog)
+	case 'UPDATE_BLOG':
+		console.log('reducer')
+		console.log(action.data)
+		return state.map(blog => blog.id === action.data.id ? action.data : blog)
 	case 'INITIALISE_BLOGS':
 		return action.data
 	default:

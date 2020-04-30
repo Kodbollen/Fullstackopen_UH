@@ -1,18 +1,14 @@
-import React, {useState} from 'react'
+import React from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import {upvoteBlog, removeBlog} from '../reducers/blogReducer'
 import {setNotification, removeNotification} from '../reducers/notificationReducer'
 import {addTimeout, removeTimeout} from '../reducers/timeoutReducer'
+import CommentSection from '../components/CommentSection'
 
 const BlogView = ({blog}) => {
 	const dispatch = useDispatch()
 	const user = useSelector(state => state.user)
     const timeoutId = useSelector(state => state.timeoutId)
-    const [contentVisibility, setContentVisibility] = useState(false)
-
-    const toggleVisibility = () => {
-        setContentVisibility(!contentVisibility)
-    }
 
     const updateBlog = () => {
         dispatch(upvoteBlog(blog, user.token))
@@ -20,25 +16,29 @@ const BlogView = ({blog}) => {
     }
 
     const deleteBlog = () => {
-        if (window.confirm(`Remove blog '${blog.title}' by ${blog.author}`)) {
-            dispatch(removeBlog(blog, user.token))
-            createNotification(`'${blog.title}' was successfully deleted`, 'info')
-        }
+        // ---------TODO: Remove should clean up connected comments:----------
+        // --- Create service function for deletion --------------------------
+        // --- batch delete all comments tied to a blog id on removal of blog 
+        // -------------------------------------------------------------------
+
+        // if (window.confirm(`Remove blog '${blog.title}' by ${blog.author}`)) {
+        //     dispatch(removeBlog(blog, user.token))
+        //     createNotification(`'${blog.title}' was successfully deleted`, 'info')
+        // }
+        createNotification('Functionality disabled. Cleanup of abandoned children (comments) needed!', 'error')
     }
     
-    const createNotification = (message) => {
+    const createNotification = (message, type) => {
         if (timeoutId) {
             clearTimeout(timeoutId)
         }
-        dispatch(setNotification(message, 'info'))
+        dispatch(setNotification(message, type))
         const nId = setTimeout(() => {
             dispatch(removeNotification())
             dispatch(removeTimeout())
 		}, 5000)
         dispatch(addTimeout(nId))
 	}
-
-    const hideOnVisibility = {display: contentVisibility ? '' : 'none'}
 
     return (
         <div>
@@ -50,7 +50,7 @@ const BlogView = ({blog}) => {
               {user.username === blog.user.username ? <button className='removeBtn' onClick={deleteBlog}>remove</button> : null}
             </div>
           </div>
-          {/* <h3>Comments</h3> */}
+          <CommentSection blog={blog}/>
         </div>
     )
 }

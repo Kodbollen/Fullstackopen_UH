@@ -28,17 +28,23 @@ const Blog = ({blog}) => {
     }
 
     const deleteBlog = () => {
-        if (window.confirm(`Remove blog '${blog.title}' by ${blog.author}`)) {
-            dispatch(removeBlog(blog, user.token))
-            createNotification(`'${blog.title}' was successfully deleted`, 'info')
-        }
+        // ---------TODO: Remove should clean up connected comments:----------
+        // --- Create service function for deletion --------------------------
+        // --- batch delete all comments tied to a blog id on removal of blog 
+        // -------------------------------------------------------------------
+
+        // if (window.confirm(`Remove blog '${blog.title}' by ${blog.author}`)) {
+        //     dispatch(removeBlog(blog, user.token))
+        //     createNotification(`'${blog.title}' was successfully deleted`, 'info')
+        // }
+        createNotification('Functionality disabled. Cleanup of abandoned children (comments) needed!', 'error')
     }
     
-    const createNotification = (message) => {
+    const createNotification = (message, type) => {
         if (timeoutId) {
             clearTimeout(timeoutId)
         }
-        dispatch(setNotification(message, 'info'))
+        dispatch(setNotification(message, type))
         const nId = setTimeout(() => {
             dispatch(removeNotification())
             dispatch(removeTimeout())

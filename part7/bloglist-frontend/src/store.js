@@ -3,6 +3,7 @@ import thunk from 'redux-thunk'
 import {composeWithDevTools} from 'redux-devtools-extension'
 import blogReducer from './reducers/blogReducer'
 import userReducer from './reducers/userReducer'
+import commentReducer from './reducers/commentReducer'
 import notificationReducer from './reducers/notificationReducer'
 import timeutReducer from './reducers/timeoutReducer'
 import infoUserReducer from './reducers/infoUserReducer'
@@ -12,7 +13,8 @@ const reducer = combineReducers({
 	user: userReducer,
 	notification: notificationReducer,
 	timeoutId: timeutReducer,
-	usersInfo: infoUserReducer
+	usersInfo: infoUserReducer,
+	comments: commentReducer
 })
 
 const store = createStore(

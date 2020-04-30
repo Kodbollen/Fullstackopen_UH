@@ -31,6 +31,7 @@ commentRouter.post('/', async (request, response) => {
 	const user = await User.findById(decodedToken.id)
 	const blog = await Blog.findById(body.blogId)
 
+
 	const comment = new Comment({
 		content: body.content,
 		date: new Date(),

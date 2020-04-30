@@ -11,6 +11,7 @@ import SingleBlogPage from './pages/SingleBlogPage'
 import {setUser} from './reducers/userReducer'
 import {initialiseBlogs} from './reducers/blogReducer'
 import {initialiseUsers} from './reducers/infoUserReducer'
+import {initialiseComments} from './reducers/commentReducer'
 import './App.css'
 
 const App = () => {
@@ -24,6 +25,7 @@ const App = () => {
     useEffect(() => {
         dispatch(initialiseBlogs())
         dispatch(initialiseUsers())
+        dispatch(initialiseComments())
     }, [dispatch])
 
     useEffect(() => {

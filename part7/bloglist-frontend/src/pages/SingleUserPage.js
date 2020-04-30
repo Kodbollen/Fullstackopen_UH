@@ -1,6 +1,6 @@
 import React from 'react'
 import {useSelector} from 'react-redux'
-import {useParams, Link} from 'react-router-dom'
+import {useParams} from 'react-router-dom'
 
 const SingleUserPage = () => {
     const id = useParams().id
