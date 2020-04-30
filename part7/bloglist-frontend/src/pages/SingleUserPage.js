@@ -1,6 +1,6 @@
 import React from 'react'
 import {useSelector} from 'react-redux'
-import {useParams} from 'react-router-dom'
+import {useParams, Link} from 'react-router-dom'
 
 const SingleUserPage = () => {
     const id = useParams().id
@@ -21,8 +21,8 @@ const SingleUserPage = () => {
           <ul>
             {user.blogs.map(blog => (
                 <li key={blog.id}>
-                  {/* <Link to={`/blogs/id`}>{blog.title} by {blog.author}</Link> */}
-                  {blog.title} by {blog.author}
+                  <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+                  &nbsp; {blog.author}
                 </li>
             ))}
 		  </ul>
