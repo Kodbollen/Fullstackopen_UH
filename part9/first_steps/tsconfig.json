@@ -1,5 +1,10 @@
 {
 	"compilerOptions": {
-		"noImplicitAny": true
+		"target": "es2017",
+		"allowSyntheticDefaultImports": true,
+		"checkJs": true,
+		"jsx": "react",
+		"lib": ["dom", "es2017"],
+		"noImplicitAny": true,
 	}
 }
