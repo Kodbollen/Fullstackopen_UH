@@ -8,13 +8,12 @@ interface TrainingReport {
     average: number;
 }
 
-const getArgumentArray = (args: Array<string>): Array<number> => {
-    if(process.argv.length < 3) throw new Error('No arguments received');
-    return [...args].slice(2).map(n => Number(n));
-};
+// const getArgumentArray = (args: Array<string>): Array<number> => {
+//     if(process.argv.length < 3) throw new Error('No arguments received');
+//     return [...args].slice(2).map(n => Number(n));
+// };
 
-const calculateExercises = (history: Array<number>): TrainingReport => {
-    const target = 2;
+const calculateExercises = (history: Array<number>, target: number): TrainingReport => {
     const periodLength = history.length;
     const trainingDays = history.filter(day => day > 0).length;
     const average = history.reduce((acc, val) => acc + val) / history.length;
@@ -42,5 +41,4 @@ const calculateExercises = (history: Array<number>): TrainingReport => {
     };
 };
 
-const args = getArgumentArray(process.argv);
-console.log(calculateExercises(args));
+export default calculateExercises;
